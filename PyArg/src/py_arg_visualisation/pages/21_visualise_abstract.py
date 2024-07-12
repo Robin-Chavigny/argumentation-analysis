@@ -311,8 +311,6 @@ def generate_abstract_argumentation_framework(_nr_of_clicks_random: int, af_cont
     Generate a random AF after clicking the button and put the result in the text box.
     """
     global prev_results  # Utiliser la variable globale
-    print(prev_results)
-    print('dash.callback_context.triggered_id:',dash.callback_context.triggered_id)
 
     if _nr_of_clicks_random == 1:
         af_content=None
