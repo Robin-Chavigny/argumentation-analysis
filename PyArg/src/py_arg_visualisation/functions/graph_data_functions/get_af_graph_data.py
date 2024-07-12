@@ -57,11 +57,8 @@ def get_argumentation_framework_graph_data(arg_framework: AbstractArgumentationF
                        'color': get_color('red', color_blind_mode)}
                       for argument in arg_framework.arguments
                       if argument.name in red]
-    data_nodes_unselected = [{'id': add_newline_every_n_chars(str(argument),15), 'label': add_newline_every_n_chars(str(argument),15),
-                              'color': get_color('gray', color_blind_mode)}
-                             for argument in arg_framework.arguments
-                             if argument.name in other_arguments]
-    data_nodes = data_nodes_blue + data_nodes_red + data_nodes_yellow + data_nodes_green + data_nodes_unselected
+    
+    data_nodes = data_nodes_blue + data_nodes_red + data_nodes_yellow + data_nodes_green 
 
     data_edges = [{'id': str(defeat.from_argument) + '-' + str(defeat.to_argument),
                    'from': str(defeat.from_argument), 'to': str(defeat.to_argument), 'arrows': 'to'}
