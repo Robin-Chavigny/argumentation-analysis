@@ -91,6 +91,14 @@ layout = dbc.Container([
         html.A([html.Img(src='/assets/image_presentation/image13.png', style={'width': '50%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})], href='https://docs.google.com/presentation/d/1bSwaIrm90EFR1jriAMNiQa0PQ5hGYC1zXHboal2hrts/edit#slide=id.g11f682941b8_0_111',target="_blank")
     ]),
     dbc.Row([
+        html.P(['This presentation took place on July 11th and is based on the articul "LangChain AI Handbook" and more specificaly the chapter 5. ',
+        html.A('(Linke of the original document). ', href='https://www.pinecone.io/learn/series/langchain/',target="_blank"),
+        ])
+    ]),
+    dbc.Row([
+        html.A([html.Img(src='/assets/image_presentation/image14.png', style={'width': '50%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})], href='https://docs.google.com/presentation/d/1iN-g7hHXjdHHdcNTG4upTttXPzb_Ck8W2-GQ8JYw_d8/edit#slide=id.p',target="_blank")
+    ]),
+    dbc.Row([
         html.H2('5-Beginning of Machine Learning'),
         html.P('For this part with started implementing some machine learning to creat an argument mining systeme. I started by adding an SVM with different karnels. I divided my dataset on 80% train and 20% test. I used various k_fold. Here is some result. '),
     ]),
