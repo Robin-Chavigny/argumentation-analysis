@@ -6,6 +6,31 @@ from py_arg_visualisation.functions.graph_data_functions.get_color import get_co
 
 
 
+def add_newline_every_n_chars(text: str, n: int) -> str:
+    words = text.split(" ")
+    lines = []
+    current_line = ""
+
+    for word in words:
+        # Vérifier si ajouter le mot actuel dépasse la longueur n
+        if len(current_line) + len(word) + 1 > n:
+            # Ajouter la ligne actuelle à la liste des lignes
+            lines.append(current_line)
+            # Commencer une nouvelle ligne avec le mot actuel
+            current_line = word
+        else:
+            # Ajouter le mot à la ligne actuelle
+            if current_line:
+                current_line += " " + word
+            else:
+                current_line = word
+
+    # Ajouter la dernière ligne
+    if current_line:
+        lines.append(current_line)
+    
+    # Joindre les lignes avec '\n'
+    return '\n'.join(lines)
 
 
 def replace_spaces(argument):
@@ -69,29 +94,3 @@ def get_argumentation_framework_graph_data(arg_framework: AbstractArgumentationF
     data = {'nodes': data_nodes, 'edges': data_edges}
     return data
 
-
-def add_newline_every_n_chars(text: str, n: int) -> str:
-    words = text.split(" ")
-    lines = []
-    current_line = ""
-
-    for word in words:
-        # Vérifier si ajouter le mot actuel dépasse la longueur n
-        if len(current_line) + len(word) + 1 > n:
-            # Ajouter la ligne actuelle à la liste des lignes
-            lines.append(current_line)
-            # Commencer une nouvelle ligne avec le mot actuel
-            current_line = word
-        else:
-            # Ajouter le mot à la ligne actuelle
-            if current_line:
-                current_line += " " + word
-            else:
-                current_line = word
-
-    # Ajouter la dernière ligne
-    if current_line:
-        lines.append(current_line)
-    
-    # Joindre les lignes avec '\n'
-    return '\n'.join(lines)
