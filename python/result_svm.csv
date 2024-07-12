@@ -1,0 +1,11 @@
+_unit_id$,$pair_id$,$relation_gold$,$relation_gold_reason$,$sentence_1$,$sentence_2$,$speaker_1$,$speaker_2$,$topic
+0$,$0$,$Attack$,$This is an attack$,$Why didn't you when you vice president?$,$You keep talking about all these things you're going to do, and you're going to do this, but you were there just a short time ago and you guys did nothing.$,$Donald Trump$,$Donald Trump$,$Racism
+0$,$0$,$Support$,$This is a support$,$And it was called the Cancer Moonshot.$,$And I work with a number of Democrats and Republicans.$,$Joe Biden$,$Joe Biden$,$Democracy
+0$,$0$,$Support$,$This is a support$,$Let him finish.$,$Do you believe for a moment what he's telling you in light of all the lies he's told you about the whole issue relating to COVID?$,$Chris Wallace$,$Joe Biden$,$COVID
+0$,$0$,$Attack$,$This is an attack$,$Not true.$,$That's not true either, right?$,$Donald Trump$,$Donald Trump$,$Climate change
+0$,$0$,$Support$,$This is a support$,$So you said you went to Delaware State, but you forgot the name of your college.$,$You didn't go to Delaware State.$,$Donald Trump$,$Donald Trump$,$COVID
+0$,$0$,$Attack$,$This is an attack$,$Your administration has rolled back regulations on these kinds of facilities.$,$Why should these families give you another four years in office?$,$Kristen Welker$,$Kristen Welker$,$Climate change
+0$,$0$,$Support$,$This is a support$,$Yes, I would take it.$,$I'd encourage people to take it.$,$Joe Biden$,$Joe Biden$,$COVID
+0$,$0$,$Attack$,$This is an attack$,$Not true.$,$That's not true either, right?$,$Donald Trump$,$Donald Trump$,$Climate change
+0$,$0$,$Attack$,$This is an attack$,$You keep talking about all these things you're going to do, and you're going to do this, but you were there just a short time ago and you guys did nothing.$,$We did-$,$Donald Trump$,$Joe Biden$,$Racism
+0$,$0$,$Support$,$This is a support$,$But how about the question of political accountability?$,$Is there some tension between that and bringing people together?$,$George Stephanopoulos$,$George Stephanopoulos$,$Democracy
