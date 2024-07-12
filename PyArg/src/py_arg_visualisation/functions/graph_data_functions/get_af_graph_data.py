@@ -2,25 +2,7 @@ from typing import List, Optional, Dict
 from py_arg.abstract_argumentation_classes.abstract_argumentation_framework import AbstractArgumentationFramework
 from py_arg_visualisation.functions.graph_data_functions.get_color import get_color
 
-def add_newline_every_n_chars(text: str, n: int) -> str:
-    words = text.split(" ")
-    lines = []
-    current_line = ""
 
-    for word in words:
-        if len(current_line) + len(word) + 1 > n:
-            lines.append(current_line)
-            current_line = word
-        else:
-            if current_line:
-                current_line += " " + word
-            else:
-                current_line = word
-
-    if current_line:
-        lines.append(current_line)
-    
-    return '\n'.join(lines)
 
 def replace_spaces(argument):
     return argument.replace("_", " ").replace(";", ",")
@@ -79,13 +61,9 @@ def get_argumentation_framework_graph_data(arg_framework: AbstractArgumentationF
                       for argument in arg_framework.arguments
                       if argument.name in red]
     
-    data_nodes_unselected = [{'id': add_newline_every_n_chars(replace_spaces(str(argument.name)), 15), 
-                              'label': add_newline_every_n_chars(replace_spaces(str(argument.name)), 15),
-                              'color': get_color('gray', color_blind_mode)}
-                             for argument in arg_framework.arguments
-                             if argument.name in other_arguments]
     
-    data_nodes = data_nodes_blue + data_nodes_red + data_nodes_yellow + data_nodes_green + data_nodes_unselected
+    
+    data_nodes = data_nodes_blue + data_nodes_red + data_nodes_yellow + data_nodes_green
 
     data_edges = [{'id': str(defeat.from_argument) + '-' + str(defeat.to_argument),
                    'from': str(defeat.from_argument), 'to': str(defeat.to_argument), 'arrows': 'to'}

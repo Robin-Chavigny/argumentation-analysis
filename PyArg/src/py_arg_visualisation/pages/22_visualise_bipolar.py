@@ -1131,32 +1131,6 @@ def generate_bipolar_argumentation_framework(_nr_of_clicks_random: int, af_conte
     return prev_results,0,af_content,af_filename
 
 
-
-def add_newline_every_n_chars(text: str, n: int) -> str:
-    words = text.split(" ")
-    lines = []
-    current_line = ""
-
-    for word in words:
-        # Vérifier si ajouter le mot actuel dépasse la longueur n
-        if len(current_line) + len(word) + 1 > n:
-            # Ajouter la ligne actuelle à la liste des lignes
-            lines.append(current_line)
-            # Commencer une nouvelle ligne avec le mot actuel
-            current_line = word
-        else:
-            # Ajouter le mot à la ligne actuelle
-            if current_line:
-                current_line += " " + word
-            else:
-                current_line = word
-
-    # Ajouter la dernière ligne
-    if current_line:
-        lines.append(current_line)
-    
-    # Joindre les lignes avec '\n'
-    return '\n'.join(lines)
 def replace_spaces2(argument):
     return argument.replace("_", " ").replace(";", ",")
 def replace_fin(argument):
