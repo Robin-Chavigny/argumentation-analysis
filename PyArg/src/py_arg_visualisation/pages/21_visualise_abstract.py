@@ -845,6 +845,7 @@ def add_newline_every_n_chars(text: str, n: int) -> str:
     
     # Joindre les lignes avec '\n'
     return '\n'.join(lines)
+
 def replace_spaces2(argument):
     return argument.replace("_", " ").replace(";", ",")
 def replace_fin(argument):

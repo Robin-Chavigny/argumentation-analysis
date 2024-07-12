@@ -57,11 +57,41 @@ def get_argumentation_framework_graph_data(arg_framework: AbstractArgumentationF
                        'color': get_color('red', color_blind_mode)}
                       for argument in arg_framework.arguments
                       if argument.name in red]
-    
-    data_nodes = data_nodes_blue + data_nodes_red + data_nodes_yellow + data_nodes_green 
+    data_nodes_unselected = [{'id': add_newline_every_n_chars(str(argument),15), 'label': add_newline_every_n_chars(str(argument),15),
+                              'color': get_color('gray', color_blind_mode)}
+                             for argument in arg_framework.arguments
+                             if argument.name in other_arguments]
+    data_nodes = data_nodes_blue + data_nodes_red + data_nodes_yellow + data_nodes_green + data_nodes_unselected
 
     data_edges = [{'id': str(defeat.from_argument) + '-' + str(defeat.to_argument),
                    'from': str(defeat.from_argument), 'to': str(defeat.to_argument), 'arrows': 'to'}
                   for defeat in arg_framework.defeats]
     data = {'nodes': data_nodes, 'edges': data_edges}
     return data
+
+
+def add_newline_every_n_chars(text: str, n: int) -> str:
+    words = text.split(" ")
+    lines = []
+    current_line = ""
+
+    for word in words:
+        # Vérifier si ajouter le mot actuel dépasse la longueur n
+        if len(current_line) + len(word) + 1 > n:
+            # Ajouter la ligne actuelle à la liste des lignes
+            lines.append(current_line)
+            # Commencer une nouvelle ligne avec le mot actuel
+            current_line = word
+        else:
+            # Ajouter le mot à la ligne actuelle
+            if current_line:
+                current_line += " " + word
+            else:
+                current_line = word
+
+    # Ajouter la dernière ligne
+    if current_line:
+        lines.append(current_line)
+    
+    # Joindre les lignes avec '\n'
+    return '\n'.join(lines)
