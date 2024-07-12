@@ -6,3 +6,4 @@ visdcc==0.0.50
 PyArg/src/py_arg/
 pandas
 parse
+chardet
