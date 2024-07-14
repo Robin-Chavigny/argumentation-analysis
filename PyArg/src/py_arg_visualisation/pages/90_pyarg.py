@@ -56,7 +56,33 @@ layout = dbc.Container([
         html.Img(src='/assets/image_stat/image8.png', style={'width': '50%'})
     ]),
     dbc.Row([
-        html.H2('4-Theoric aspect'),
+        html.H2('4-Beginning of Machine Learning'),
+        html.P('The next step in our project is the creation of differents machine learning models to extra new argument and see new'
+               ' relation between them. Every ML model will be apply on Abstract Argumentation Framework (AA) and Bipolar Argumentation'
+               ' Framework (BAF).'),
+        html.P('The first model I added is the Support Vector Machine (SVM). This model use different kernel for its application like'
+               ' linear, polynomial, radial basis function (rbf), sigmoidor kernel. To train our models we will divided our dataset'
+               ' in two group. A training group that is composed of 80%_ of the original dataset, its use to train the model to '
+               'reconized and learn how to found the correct output for a given data. The second group is the testing group with the'
+               ' remaining 20%_ of the original dataset and it s use to testing the model and see how well it perform. For every '
+               'models we used various k_fold to see its impact on the result output.'),
+    ]),
+    dbc.Row([
+        html.A([html.Img(src='/assets/image_stat/ml/image11.png', style={'width': '50%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})])
+    ]),
+    dbc.Row([
+        html.P('We can see that the accuracy score of each kernel thos not depend of the type of AF. However we observe a slightly '
+               'decrease for the sigmoid kernel compared to others. This observation will stand for the reste of our analysis. '),
+    ]),
+    dbc.Row([
+        html.A([html.Img(src='/assets/image_stat/ml/image12.png', style={'width': '30%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})]),
+        html.A([html.Img(src='/assets/image_stat/ml/image13.png', style={'width': '30%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})]),
+        html.A([html.Img(src='/assets/image_stat/ml/image14.png', style={'width': '30%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})]),
+    ]),
+
+
+    dbc.Row([
+        html.H2('5-Theoric aspect'),
         html.P(['On June 5th, I presented the "Artificial Intelligence on the acceptability of arguments and its fundamental role in nonmonotonic reasoning, logic programming and n-person games", by Phan Minh DUNG. ',
         html.A('(Linke of the original document). ', href='https://pdf.sciencedirectassets.com/271585/1-s2.0-S0004370200X00100/1-s2.0-000437029400041X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjELb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIDwt6edYHrGwHv73ScELrzLKj%2BekT3B64KW5L3rpA%2FfZAiEA%2FdMxYsMsOdQbF7ncj2OTefI%2FtgnGf4MtcR98JP8E2SAqswUIPxAFGgwwNTkwMDM1NDY4NjUiDK%2F%2BeI6BfgsahznljCqQBdoQfkFu0ZKiPnyXYCTee0Md6r%2BnRz4f1n6v6mUObUM2ygAQVGxZXyjCfZ2JVDHs0KzRbuCLni8HNeNjcu8HTXDv46fiFNWJlEbYPG%2F6lTwkVJnpwHELcZk2vdHCy4f7KO03jCvLpZlP5YaqRccKGn8Pj9%2FaDQFSew8jgNy6ormKjT8FPyG6mqgvIwXSNmNKclrOvsPVHoMt6ym13bkLxiZFO3ZvZG2azVUIWGzrP%2B6uTmU2pxJdUudgPMk6mrgth32lakZZXSMhj3nsl8E6F6At9kXaMQdSKabUmYaO25tZUv4mxtJJ3xbdiM3alP28mA1ER1KR9Dyd9DxPwIkp1O8FJLOfhNioRtJD9XOjwKrzuSuSA8r0hnUVwhFr9EqoNjN2sCO3OmnLECbOaHj0t8z6N9QZuGbdnrjJkPn4Cd9%2B2JfEtLteB8u67gU8sfRE6kA9TywxuybuL1ZsMk%2Bxsh%2BEHyoBh804O2gqlTQXeLeH4TELdaf%2B%2BnMJ%2FR3%2FO%2F9oFqgjHBiw7qD8ULz8r2SfpzvYP7FX4iuwIEaJh%2BYSMH8gn%2FRFN%2Bp5tpLmBO3msyuKvkn4bv9A0AvLjIU9T4ugXOZpJSdePT9TiaVDrbFIlhmCXMF5JIMcpNXNCgYtfmho%2B5hquXvrg2ovNdfoVHsigBWu2ualDaJr5lqshEY9mzsFYMMsKzSLob22naxUmImpidKc8dZvkBC893Gf4opBnuPU%2FSEIDKTrFPhkx9y3l5NVhE%2FuicjMd3CGXJbkNlLod2JjQXi4%2BMewXoeYQfX2Sy4N9iLbDtLp0zU9yyZ25MXaA2AuACUsCVD6qWzZU9kFzd6BQti3PXuhvEj6Qv7F8xsmCCWzMLC5rpBgsFTeNVreMPvJ5bIGOrEBDAHdFlmmdYEZH46U%2FmKYgjthtpx0dcCNjaHDbMM1JXbJvRMAXutV8LpmEIIe1ZJ4za4wgRzzX3etG4YESBZeb3IWLKk2ohkgfuGRg%2BZax6NmY3ug%2FquMLrMTEy0M1%2BZLM348nySBQ6cLQhsM%2F%2BjUEOelgqZj3AoCB4CnoLLAvvUE%2BNMUT%2FVIc53VEd4pFq6q0Z3z0%2FRW2eYTpqCAPDkryiajrt3IgO%2B1jEZZOuswW0hD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240531T070534Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYSWSRDPXT%2F20240531%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=e52e971c9d024187c218a7f3baeec77cbf53b65e8d8e5f113348b5c725836c7d&hash=7682ca8d8fca403c6955bfafcf7aca3d967cb96a43136794a3a64714f44c5f4a&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=000437029400041X&tid=spdf-4d413a54-2a9e-468c-ad8d-f19d942893c1&sid=4d33db6e19d9b04e6a69dce17f0bb74cfeaegxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0e175e5901525e0b0d&rr=88c51dc2f813f593&cc=jp',target="_blank"),
         ])
@@ -97,13 +123,6 @@ layout = dbc.Container([
     ]),
     dbc.Row([
         html.A([html.Img(src='/assets/image_presentation/image14.png', style={'width': '50%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})], href='https://docs.google.com/presentation/d/1iN-g7hHXjdHHdcNTG4upTttXPzb_Ck8W2-GQ8JYw_d8/edit#slide=id.p',target="_blank")
-    ]),
-    dbc.Row([
-        html.H2('5-Beginning of Machine Learning'),
-        html.P('For this part with started implementing some machine learning to creat an argument mining systeme. I started by adding an SVM with different karnels. I divided my dataset on 80% train and 20% test. I used various k_fold. Here is some result. '),
-    ]),
-    dbc.Row([
-        html.A([html.Img(src='/assets/image_stat/image11.png', style={'width': '50%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})])
     ]),
 ], className='page')
 
