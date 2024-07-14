@@ -75,9 +75,17 @@ layout = dbc.Container([
                'decrease for the sigmoid kernel compared to others. This observation will stand for the reste of our analysis. '),
     ]),
     dbc.Row([
-        html.A([html.Img(src='/assets/image_stat/ml/image12.png', style={'width': '30%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})]),
-        html.A([html.Img(src='/assets/image_stat/ml/image13.png', style={'width': '30%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})]),
-        html.A([html.Img(src='/assets/image_stat/ml/image14.png', style={'width': '30%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})]),
+        html.Img(src='/assets/image_stat/ml/image14.png', style={'width': '33%'}),
+        html.Img(src='/assets/image_stat/ml/image13.png', style={'width': '33%'}),
+        html.Img(src='/assets/image_stat/ml/image12.png', style={'width': '33%'}),
+    ]),
+    dbc.Row([
+        html.P('To have a more global view of our models we had compared them with various primse. The Recall that is defined by the '
+               'proportion of instanes correctly identify by the model, Recall = TP/(TP+FN), TP: True Positif; FN: Fals Negatif.'
+               ' The Precision that is defined by the proportion of instances predict as Positif that are indeed positif, Precision='
+               'TP/(TP+FP), FP: Fals Positif. And the F1 score which is defined by the harmonic mean of precision and recall, '
+               'F1 = 2 x (Precision x Recall)/(Precision + Recall)'),
+        html.P('The most notable result is '),
     ]),
 
 
