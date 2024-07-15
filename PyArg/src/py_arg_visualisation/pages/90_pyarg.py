@@ -85,7 +85,57 @@ layout = dbc.Container([
                ' The Precision that is defined by the proportion of instances predict as Positif that are indeed positif, Precision='
                'TP/(TP+FP), FP: Fals Positif. And the F1 score which is defined by the harmonic mean of precision and recall, '
                'F1 = 2 x (Precision x Recall)/(Precision + Recall)'),
-        html.P('The most notable result is '),
+        html.P('The most notable result is for every models the recall score approximaly double in the AA type between the 5 and 10 '
+               'K-folds. This as an direct impact on the F1 score as well.'),
+        html.P('To extract the data from the original data set we choose to use the polynomial model with a 10 K-folds because it seems'
+               ' to have the better overall performances.'),
+    ]),
+    dbc.Row([
+        html.P('The second model I implemented is the Decision Tree model. This model divided recursively the dataset following certains '
+               'conditions. The result is a graph with the shape of a tree,  Each node of the tree represents a decision point, '
+               'it is an attributs that divide the upper dataset. It includes: An attributs are choose to maximise the measure of impurity/diversity,'
+               ' here we use the gini index defined by : gini = 1-∑(i=1->n) (p_i)^2, where p_i is the proportion of samples of class i in the node.'
+               ' If gini = 0 it is a perfect purity (all samples belong to a single class), and if gini = 0.5 it is the maximum'
+               ' impurity (samples are evenly distributed among classes). It also contain the value or condition used to split the data.'
+               ' We can find as well the number of samples reaching that node, and the class assigned to that node (based on the majority class).'),
+    ]),
+    dbc.Row([
+        html.P('We divided the original dataset between 70% in the training groupe and 30% in the testing groupe.'),
+    ]),
+    dbc.Row([
+        html.Img(src='/assets/image_stat/ml/image15.png', style={'width': '60%','display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+        html.Img(src='/assets/image_stat/ml/image16.png', style={'width': '33%','display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+    ]),
+    dbc.Row([
+        html.P('This is the representation of the decision tree for the AA model, 0 represent the Non-attack class and 1 the attack class.'
+               ' For the BAF model we obtain this shematization with 2 representing the Support class and 0 the Neither one:'),
+    ]),
+    dbc.Row([
+        html.Img(src='/assets/image_stat/ml/image18.png', style={'width': '33%','display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+        html.Img(src='/assets/image_stat/ml/image17.png', style={'width': '60%','display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+    ]),
+    dbc.Row([
+        html.P('The third model is the Random Forest. It creat a multitude of decision tree during its training and the resulted prediction'
+               ' is the most represented class from each tree. For the repartition of the original dataset we use the same as the SVM'
+               ' model, 80% training and 20% testing. We obtain for the AA model:'),
+    ]),
+    dbc.Row([
+        html.Img(src='/assets/image_stat/ml/image20.png', style={'width': '45%', 'margin-left': 'auto', 'margin-right': 'auto'}),
+        html.Img(src='/assets/image_stat/ml/image21.png', style={'width': '30%','heigth': '20%','margin-top': 'auto', 'margin-left': 'auto', 'margin-right': 'auto'}),
+    ]),
+    dbc.Row([
+        html.Img(src='/assets/image_stat/ml/image19.png', style={'width': '80%','display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+    ]),
+    dbc.Row([
+        html.P('In comparaison the BAF model gave us this results:'),
+    ]),
+    dbc.Row([
+        html.Img(src='/assets/image_stat/ml/image23.png', style={'width': '45%', 'margin-left': 'auto', 'margin-right': 'auto'}),
+        html.Img(src='/assets/image_stat/ml/image22.png', style={'width': '30%','heigth': '20%','margin-top': 'auto', 'margin-left': 'auto', 'margin-right': 'auto'}),
+    ]),
+    dbc.Row([
+        html.Img(src='/assets/image_stat/ml/image24.png', style={'width': '50%','display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+        html.Img(src='/assets/image_stat/ml/image25.png', style={'width': '50%','display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
     ]),
 
 
