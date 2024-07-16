@@ -151,15 +151,10 @@ def get_abstract_evaluation_div():
                 dbc.Row([
                     dbc.Col(html.B('Semantics')),
                     dbc.Col(dbc.Select(options=[
-                        {'label': 'Admissible', 'value': 'Admissible'},
-                        {'label': 'Complete', 'value': 'Complete'},
+                        {'label': 'Completed', 'value': 'Completed'},
                         {'label': 'Grounded', 'value': 'Grounded'},
-                        {'label': 'Preferred', 'value': 'Preferred'},
-                        {'label': 'Ideal', 'value': 'Ideal'},
-                        {'label': 'Stable', 'value': 'Stable'},
-                        {'label': 'Semi-stable', 'value': 'SemiStable'},
-                        {'label': 'Eager', 'value': 'Eager'},
-                    ], value='Complete', id='abstract-evaluation-semantics')),
+                        {'label': 'Restrainted', 'value': 'Restrainted'},
+                    ], value='Completed', id='abstract-evaluation-semantics')),
                 ]),
                 dbc.Row([
                     dbc.Col(html.B('Evaluation strategy')),
@@ -2117,6 +2112,7 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
         arg_list = [Argument(arg) for arg in arguments.split("$end$")]
         defeat_list_att = []
         defeat_list_sup = []
+        pri = 'Click on the extension/argument buttons to display the corresponding argument(s) in the graph.'
         for attack in attacks.split('$end$'):
             if attack[:3]=='$A$':
                 att_list = attack.replace(')', '').replace('(', '').replace('$A$', '').split("$,$")  
@@ -2128,18 +2124,53 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
                     defeat_list_att.append(Defeat(Argument(att_list[0]), Argument(att_list[1])))
 
         new_arg_list = []
-        defeat_list = []
-        for arg in arg_list:
-            n=0
-            for i in range(len(defeat_list_att)):
-                if arg == defeat_list_att[i].to_argument:
-                    n=n-1
-            for i in range(len(defeat_list_sup)):
-                if arg == defeat_list_sup[i].to_argument:
-                    n=n+1
-            if n>=0:
-                new_arg_list.append(arg)
-                
+
+        if semantics == 'Grounded':
+            pri = 'The Grounded semantic is the minimal subset of admissible arguments which are not attacked.'
+            for arg in arg_list:
+                t=0
+                for defeat in defeat_list_att:
+                    if arg == defeat.to_argument:
+                        t=1
+                if t == 0:
+                    new_arg_list.append(arg)
+        elif semantics == 'Completed':
+            pri = 'The Completed semantic is the subset of all admissible argument and the argument which are defended.'
+            def is_admissible_completed(arg):
+                for sup in defeat_list_sup:
+                    if arg == sup.to_argument:
+                        arg_sup = sup.from_argument
+                        if is_admissible_completed(arg_sup)<1:
+                            return -1
+                for att in defeat_list_att:
+                    if arg == att.to_argument:
+                        arg_att = att.from_argument
+                        if is_admissible_completed(arg_att)<1:
+                            return 1
+                return 0
+            for arg in arg_list:
+                if is_admissible_completed(arg)<1:
+                    new_arg_list.append(arg)
+        elif semantics == 'Restrainted':
+            pri = 'The Restrainted semantic is the subset of all admissible argument and the argument which are more defended than attacked.'
+            def is_admissible_retrainted(arg):
+                n=0
+                for sup in defeat_list_sup:
+                    if arg == sup.to_argument:
+                        arg_sup = sup.from_argument
+                        if is_admissible_retrainted(arg_sup)<1:
+                            n = n-1
+                for att in defeat_list_att:
+                    if arg == att.to_argument:
+                        arg_att = att.from_argument
+                        if is_admissible_retrainted(arg_att)<1:
+                            n = n+1
+                return n
+            for arg in arg_list:
+                if is_admissible_retrainted(arg)<1:
+                    new_arg_list.append(arg)
+
+        defeat_list = []  
         for arg in new_arg_list:   
             for i in range(len(defeat_list_att)):
                 if arg == defeat_list_att[i].to_argument and defeat_list_att[i].from_argument in new_arg_list:
@@ -2178,7 +2209,7 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
         'arguments': abstract_arguments_value,
         'attacks': abstract_attacks_value,
         }
-        return results, html.Div([html.P('Click on the extension/argument buttons to display the corresponding argument(s) in the graph.')])
+        return results, html.Div([html.P(pri)])
 
     return {}, html.Div([html.P('Click on the extension/argument buttons to display the corresponding argument(s) in the graph.')])
 
