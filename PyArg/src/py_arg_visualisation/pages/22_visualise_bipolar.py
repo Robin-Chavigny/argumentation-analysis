@@ -258,7 +258,7 @@ def update_output_bipolar(*args):
         "covid-bipolar": "COVID",
         "healthcare-bipolar": "Healthcare",
         "national-security-bipolar": "National Security",
-        "why-they-should-be-elected-bipolar": "Why Thay Should Be Elected",
+        "why-they-should-be-elected-bipolar": "Why They Should Be Elected",
         "democracy-bipolar": "Democracy",
         "integrity-bipolar": "Integrity",
     }
@@ -797,8 +797,9 @@ def generate_bipolar_argumentation_framework(_nr_of_clicks_random: int, af_conte
             }
             prev_results = results
             return results,0,af_content,af_filename
-
+        print(topic)
         if topic == 'Why They Should Be Elected':
+            print(topic)
             l=[]
             h=[]
             if 'support' in checkbox_values:
