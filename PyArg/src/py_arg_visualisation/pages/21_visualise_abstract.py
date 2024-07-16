@@ -95,7 +95,7 @@ def get_abstract_setting_specification_div():
                                                   max=100, 
                                                   step=1, 
                                                   value=50, 
-                                                  marks={i: str(i) for i in range(1, 101, 10)}
+                                                  marks={i: str(i) for i in range(1, 101, 99)}
                                                 ),
                                         html.Div(id='output-container', 
                                                  style={'margin-top': '20px'}
