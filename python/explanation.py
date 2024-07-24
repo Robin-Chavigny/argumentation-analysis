@@ -4,12 +4,16 @@ from openai import OpenAI
 
 client = OpenAI()
 
-dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_svm_aaf.csv"
-filename = "result_svm_aaf_processed.csv"
+#dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_svm_aaf.csv"
+dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_svm_baf.csv"
+f= dataset.split('/')
+#ff = f[-1].split('.')
+filename = ''.join(['C:/Users/robin/Documents/Stage Japon/argumentation-analysis/PyArg/src/py_arg_visualisation/data/ml_result/',f[-1]])#f[0],'_processed.',ff[1]])
+
 
 try:
-    with open(dataset, 'r', newline='', encoding='utf-8') as fichier_csv:
-        with open(filename, mode='w', newline='') as file:
+    with open(dataset, 'r', newline='', encoding='ISO-8859-1') as fichier_csv:
+        with open(filename, mode='w', newline='',encoding='utf-8') as file:
             lecteur_csv = csv.reader(fichier_csv)
             file.write('_unit_id$,$pair_id$,$relation_gold$,$relation_gold_reason$,$sentence_1$,$sentence_2$,$speaker_1$,$speaker_2$,$topic\n')
         
