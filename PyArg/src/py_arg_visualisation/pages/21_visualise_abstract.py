@@ -1407,15 +1407,15 @@ def create_abstract_argumentation_framework(evaluation_results, generation_resul
 
     for i in range(len(data['nodes'])):
         lab = ''
-        if(len(data['nodes'][i]['label'])!=61):
+        if len(data['nodes'][i]['label']) != 61:
             for j in range(len(data['nodes'][i]['label'])):
-                lab=lab+data['nodes'][i]['label'][j]
-                if j%60==0 and j!=0:
-                    if data['nodes'][i]['label'][j+1]!=' ' and data['nodes'][i]['label'][j]!=' ':
-                        lab=lab+'-'
-                    lab=lab+'\n' 
-            data['nodes'][i]['label']=lab
-  
+                lab += data['nodes'][i]['label'][j]
+                if j % 60 == 0 and j != 0:
+                    if j + 1 < len(data['nodes'][i]['label']) and data['nodes'][i]['label'][j+1] != ' ' and data['nodes'][i]['label'][j] != ' ':
+                        lab += '-'
+                    lab += '\n'
+            data['nodes'][i]['label'] = lab
+
     return data, legend_elements, arguments, attacks
 
 

@@ -5,7 +5,11 @@ from openai import OpenAI
 client = OpenAI()
 
 #dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_svm_aaf.csv"
-dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_svm_baf.csv"
+#dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_svm_baf.csv"
+#dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_tree_aaf.csv"
+#dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_tree_baf.csv"
+#dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_forest_aaf.csv"
+dataset = "C:/Users/robin/Documents/Stage Japon/argumentation-analysis/python/result_forest_baf.csv"
 f= dataset.split('/')
 #ff = f[-1].split('.')
 filename = ''.join(['C:/Users/robin/Documents/Stage Japon/argumentation-analysis/PyArg/src/py_arg_visualisation/data/ml_result/',f[-1]])#f[0],'_processed.',ff[1]])
