@@ -136,7 +136,7 @@ def get_abstract_setting_specification_div():
             ]),
             dbc.Row([
                 dbc.Col([
-                    html.H1("Explanation :"),
+                    html.H1(["Explanation "], style={'margin-top':'50px', 'text-decoration': 'underline'}),
                     html.Div(id='node-click-message')
                 ])
             ])
@@ -189,7 +189,7 @@ left_column = dbc.Col(
     dbc.Accordion([
         dbc.AccordionItem(get_abstract_setting_specification_div(), title='Abstract Argumentation Framework'),
         dbc.AccordionItem(get_abstract_evaluation_div(), title='Evaluation', item_id='Evaluation'),
-        dbc.AccordionItem(get_abstract_explanation_div(), title='Explanation', item_id='Explanation')
+        
     ], id='abstract-evaluation-accordion')
 )
 right_column = dbc.Col([
@@ -202,8 +202,8 @@ right_column = dbc.Col([
     ])
 ])
 layout_abstract = dbc.Row([left_column, right_column])
-layout = html.Div([html.H1('Visualisation of Abstract Argumentation Frameworks (AA)'), 
-                html.A('Bipolar Argumentation Frameworks (BAF)', href='22-visualise-bipolar', id='visualisation-link'),
+layout = html.Div([html.H1(['Visualisation of Abstract Argumentation Frameworks (AA)'],style={'margin-top':'30px', 'margin-bottom':'30px', 'text-align': 'center', 'font-size': '45px'}), 
+                html.A([html.P(['-> Bipolar Argumentation Frameworks (BAF)'],style={'margin-bottom':'15px'})], href='22-visualise-bipolar', id='visualisation-link'),
                 layout_abstract])
 
 
