@@ -16,7 +16,7 @@ app.layout = html.Div([html.Header([
             html.Ul([
                 html.Li(html.A('Presentation', href='/', id='presentation-link')),
                 html.Li(html.A('Visualisation', href='21-visualise-abstract', id='visualisation-link')),
-                html.Li(html.A('Contact', href='#', id='contact-link')),
+                html.Li(html.A('Contact', href='30-learn', id='contact-link')),
                 html.Li(dbc.DropdownMenuItem('Colorblind mode', className='fw-bold text-white')),
                 html.Li(daq.BooleanSwitch(id='color-blind-mode', on=False, className='mt-2'))
             ])
