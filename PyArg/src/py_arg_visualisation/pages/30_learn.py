@@ -6,7 +6,7 @@ from py_arg_learning.identify_grounded_extension import IdentifyGroundedExtensio
 from py_arg_learning.list_complete_extensions import ListCompleteExtensions
 from py_arg_learning.list_preferred_extensions import ListPreferredExtensions
 
-dash.register_page(__name__, name='Learn', title='Learn')
+dash.register_page(__name__, name='Contact', title='Contact')
 
 # Get all exercises
 exercise_dict = {
@@ -15,71 +15,99 @@ exercise_dict = {
     'Identify grounded extension': IdentifyGroundedExtension()
 }
 
-layout = html.Div(
-    children=[
-        html.H1('Practice with argumentation exercises'),
-        dbc.Col([
-            html.B('What would you like to practice?'),
-            dbc.Select(options=[{'label': option, 'value': option} for option in exercise_dict.keys()],
-                       value=list(exercise_dict.keys())[0],
-                       id='exercise-choice-dropdown'),
-            html.Br(),
-            dbc.Card([], id='explanation-html', className='border-0 bg-transparent'),
-            html.Br(),
-            dbc.Button('Generate exercise', id='practice-button', n_clicks=0),
-            html.Div([
-                html.Br(),
-                html.Br(),
-                dbc.Card([], id='exercise-text', className='border-0 bg-transparent'),
-                dbc.Textarea(value='', id='answer-input-text-field', style={'width': '100%'}),
-                html.Br(),
-                dbc.Button('Check', id='check-button', n_clicks=0),
-                html.Br(),
-                html.Br(),
-                html.Div([], id='feedback-field'),
-            ], style={'display': 'none'}, id='30-exercise-div'),
-            dcc.Store(id='solution-store', data=''),
-        ])
-    ]
-)
+layout = dbc.Container([
+            dbc.Row([
+                html.H1('Get in Touch', style={'text-align' : 'center', 'padding': '50px'}),
+                html.P("We appreciate your interest in our internship project, dedicated to advancing the field of argumentation analysis. Whether you have questions, feedback, or are interested in collaborating with us, we would love to hear from you. "
+                       "I'm committed to fostering open communication and is eager to connect with fellow researchers, students, and professionals. Please don't hesitate to reach out through the contact form below or via the provided email "
+                       "addresses. I look forward to engaging with you and exploring the exciting possibilities in this dynamic area of research.")
+            ]),
+            dbc.Row([
+                html.H2('Main reshearcher:',style={'text-decoration': 'underline'}),
+                dbc.Col([
+                    html.Img(src='/assets/robin2024.jpg', style={'width': '20%', 'display': 'block','margin-left': '30px'})
+                ]),
+                dbc.Col([
+                    html.H4('Robin Chavigny',style={'margin-left': '-450px'}),
+                    html.P('- Resume: ',style={'margin-left': '-435px','margin-top': '0px'}),
+                    html.P('- Email: robin.chavigny@etu.uca.fr ',style={'margin-left': '-435px','margin-top': '0px'}),
+                    html.P(['- LinkedIn: ',
+                            html.A('Robin Chavigny', href='https://www.linkedin.com/in/robin-chavigny-568556292/',target="_blank")
+                    ],style={'margin-left': '-435px','margin-top': '0px'}),
+                    html.P(['- GitHub of this project: ',
+                            html.A('argumentation-analysis', href='https://github.com/Robin-Chavigny/argumentation-analysis',target="_blank")
+                    ],style={'margin-left': '-435px','margin-top': '0px'}),
+                ])
+            ]),
+            dbc.Row([
+                html.H2('Tutors:',style={'text-decoration': 'underline','margin-top': '10px'}),
+                dbc.Col([
+                    html.H3('From JAIST:',style={'margin-left': '30px'}),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Img(src='/assets/racharak2024.png', style={'width': '42%', 'display': 'block','margin-left': '30px'})
+                        ]),
+                        dbc.Col([
+                            html.H4('Teeradaj Racharak',style={'margin-left': '-150px'}),
+                            html.P('- Office Phone: (+81)0761-51-1222',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P('- Email: racharak@jaist.ac.jp ',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P(['- Website: ',
+                                    html.A('Teeradaj Racharak', href='https://sites.google.com/view/teeradaj',target="_blank")
+                            ],style={'margin-left': '-135px','margin-top': '0px'}),
+                        ])
+                    ])
+                ]),
+                dbc.Col([
+                    html.H3('From ISIMA:',style={'margin-left': '30px'}),
+                    dbc.Row([
+                        dbc.Col([
+                            html.Img(src='/assets/guitton2024.png', style={'width': '42%', 'display': 'block','margin-left': '30px'})
+                        ]),
+                        dbc.Col([
+                            html.H4('Alexandre Guitton',style={'margin-left': '-150px'}),
+                            html.P('- Office Phone: (+33)4 73 40 52 29',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P('- Email: alexandre.guitton@uca.fr ',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P(['- Website: ',
+                                    html.A('limos.fr', href='https://limos.fr/detailperson/52',target="_blank")
+                            ],style={'margin-left': '-135px','margin-top': '0px'}),
+                        ])
+                    ])
+                ]),
+            ]),
+            dbc.Row([
+                html.H2('University:',style={'text-decoration': 'underline','margin-top': '10px'}),
+                dbc.Col([
+                    dbc.Row([
+                        dbc.Col([
+                            html.Img(src='/assets/logo_jaist.jpg', style={'width': '42%', 'display': 'block','margin-left': '30px'})
+                        ]),
+                        dbc.Col([
+                            html.H4('Japan Advanced Institute of Science and Technology',style={'margin-left': '-150px'}),
+                            html.P('- Office Phone: (+81)0761-51-1111',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P('- Adress: 1 Chome-1 Asahidai, Nomi, Ishikawa 923-1211',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P(['- Website: ',
+                                    html.A('www.jaist.ac.jp', href='https://www.jaist.ac.jp/english/',target="_blank")
+                            ],style={'margin-left': '-135px','margin-top': '0px'}),
+                        ])
+                    ])
+                ]),
+                dbc.Col([
+                    dbc.Row([
+                        dbc.Col([
+                            html.Img(src='/assets/logo_isima.png', style={'width': '42%', 'display': 'block','margin-left': '30px'})
+                        ]),
+                        dbc.Col([
+                            html.H4("Institut Supérieur d'Informarique, de Modélisation et leurs Applications",style={'margin-left': '-150px'}),
+                            html.P('- Office Phone: (+33)4 73 40 50 00',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P('- Email: secretariat@isima.fr ',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P('- Adress: 1 rue de la Chebarde, TSA 60026, 63178 Aubière CEDEX',style={'margin-left': '-135px','margin-top': '0px'}),
+                            html.P(['- Website: ',
+                                    html.A('isima.fr', href='https://www.isima.fr/',target="_blank")
+                            ],style={'margin-left': '-135px','margin-top': '0px'}),
+                        ])
+                    ])
+                ]),
+            ]),
+        ], className='page')
 
 
-@callback(Output('explanation-html', 'children'),
-          Input('exercise-choice-dropdown', 'value'))
-def get_explanation_html(exercise_choice_value: str):
-    exercise_set = exercise_dict[exercise_choice_value]
-    return [html.B('Explanation'), exercise_set.get_explanation_html()]
-
-
-@callback(Output('exercise-text', 'children'),
-          Output('solution-store', 'data'),
-          Output('answer-input-text-field', 'value'),
-          Output('feedback-field', 'children'),
-          Output('30-exercise-div', 'style'),
-          Input('practice-button', 'n_clicks'),
-          Input('check-button', 'n_clicks'),
-          State('exercise-choice-dropdown', 'value'),
-          State('exercise-text', 'children'),
-          State('answer-input-text-field', 'value'),
-          State('solution-store', 'data'),
-          State('30-exercise-div', 'style'),
-          State('color-blind-mode', 'on')
-          )
-def handle_button_click(_generate_button_clicks: int, _check_button_clicks: int,
-                        exercise_choice_value: str, old_exercise_text: str,
-                        user_solution: str, pre_generated_solutions, old_style: dict,
-                        color_blind_mode: bool):
-    button_clicked = dash.ctx.triggered_id
-    if button_clicked == 'practice-button':
-        exercise_set = exercise_dict[exercise_choice_value]
-        exercise, graph_data, solutions = exercise_set.generate_exercise_and_solutions(color_blind_mode)
-        rendered_exercise = [
-            html.B('Exercise'),
-            exercise_set.render_exercise_instance(exercise, graph_data)
-        ]
-        return rendered_exercise, solutions, '', '', {'display': 'block'}
-    elif button_clicked == 'check-button':
-        exercise_set = exercise_dict[exercise_choice_value]
-        feedback_text = exercise_set.get_feedback(user_solution, pre_generated_solutions)
-        return old_exercise_text, pre_generated_solutions, user_solution, feedback_text, {'display': 'block'}
-    return '', [], '', '', old_style

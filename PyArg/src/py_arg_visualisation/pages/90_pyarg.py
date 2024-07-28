@@ -24,7 +24,7 @@ layout = dbc.Container([
             html.A('(Linke of the original document)', href='https://content.iospress.com/articles/argument-and-computation/aac220004#ref018',target="_blank")
         ]),
     ]),
-        dbc.Row([
+    dbc.Row([
         html.A([html.Img(src='/assets/image_presentation/image1.png', style={'width': '50%', 'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'})], href='https://docs.google.com/presentation/d/1bYmTDVWkTl5dOfiMxNzFPucefAYxzk1jIGsowm4B1Y0/edit#slide=id.p',target="_blank")
     ]),
     dbc.Row([
