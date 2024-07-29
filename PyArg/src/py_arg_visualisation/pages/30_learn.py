@@ -17,7 +17,7 @@ exercise_dict = {
 
 layout = dbc.Container([
             dbc.Row([
-                html.H1('Get in Touch', style={'text-align' : 'center', 'padding': '50px'}),
+                html.H1('Get in Touch', style={'text-align' : 'center', 'padding': '50px','font-size': '70px'}),
                 html.P("We appreciate your interest in our internship project, dedicated to advancing the field of argumentation analysis. Whether you have questions, feedback, or are interested in collaborating with us, we would love to hear from you. "
                        "I'm committed to fostering open communication and is eager to connect with fellow researchers, students, and professionals. Please don't hesitate to reach out through the contact form below or via the provided email "
                        "addresses. I look forward to engaging with you and exploring the exciting possibilities in this dynamic area of research.")
@@ -29,7 +29,9 @@ layout = dbc.Container([
                 ]),
                 dbc.Col([
                     html.H4('Robin Chavigny',style={'margin-left': '-450px'}),
-                    html.P('- Resume: ',style={'margin-left': '-435px','margin-top': '0px'}),
+                    html.P(['- Resume: ',
+                            html.A('Robin_Chavigny_CV_EN_2024', href='/assets/Robin_Chavigny_CV_EN_2024.pdf',target="_blank")
+                    ],style={'margin-left': '-435px','margin-top': '0px'}),
                     html.P('- Email: robin.chavigny@etu.uca.fr ',style={'margin-left': '-435px','margin-top': '0px'}),
                     html.P(['- LinkedIn: ',
                             html.A('Robin Chavigny', href='https://www.linkedin.com/in/robin-chavigny-568556292/',target="_blank")
