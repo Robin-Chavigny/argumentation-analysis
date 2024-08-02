@@ -93,7 +93,6 @@ def get_abstract_setting_specification_div():
                                 html.Div(id='output-upload')
                             ]),
                      ], className='mt-2'),
-            # Here
             dbc.Row([
                 dbc.Col(
                     html.Div([

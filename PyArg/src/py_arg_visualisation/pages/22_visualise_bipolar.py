@@ -89,6 +89,14 @@ def get_bipolar_setting_specification_div():
                                 html.Div(id='output-upload-bipolar')
                             ]),
                      ], className='mt-2'),
+            dbc.Row([
+                dbc.Col(
+                    html.Div([
+                        html.P('Type of argument visible:'),
+                        dbc.Button('All', id='toggle-button-bipolar', n_clicks=0, className="mb-2", style={"background-color": "gray", "color": "white"})
+                    ], id='toggle-container-bipolar', style={'display': 'none'})
+                )
+            ], className='mt-2'),
             dbc.Row([dbc.Col(id='slider-container-bipolar', 
                              children=[dcc.Slider( id='slider-bipolar', 
                                                   min=1, 
@@ -296,6 +304,26 @@ def update_upload_bipolar(af_content: str, af_filename: str):
         return af_filename
     return 'No file selected'
 
+@callback(
+    Output('toggle-container-bipolar', 'style'),
+    Input('output-dropdown-bipolar', 'children')
+)
+def display_toggle(topic:str):
+    if topic=='No topic selected' or topic==None:
+        return {'display': 'none'}
+    return {'display': 'block'}
+
+@callback(
+    Output('toggle-button-bipolar', 'children'),
+    Output('toggle-button-bipolar', 'style'),
+    Input('toggle-button-bipolar', 'n_clicks')
+)
+def toggle_button(n_clicks):
+    if n_clicks % 2 == 0:
+        return 'All', {"background-color": "gray", "color": "white"}
+    else:
+        return 'Colored', {"background-color": "blue", "color": "white"}
+
 # Définir le callback pour mettre à jour l'affichage de la valeur du slider
 @callback(
     Output('output-container-bipolar', 'children'),
@@ -307,7 +335,7 @@ def update_output_slider(value):
 def replace_spaces(argument):
     return argument.replace(" ", "_").replace(",", ";")
 
-prev_results = {} 
+prev_results = {'arguments':'','attacks':''}  
 
 @callback(
     Output('generation-results-bipolar', 'data'),
@@ -321,9 +349,10 @@ prev_results = {}
     State('output-dropdown-ml-bipolar', 'children'),
     State('checkbox', 'value'),
     Input('slider-bipolar', 'value'),
+    Input('toggle-button-bipolar', 'children'),
     prevent_initial_call=True
 )
-def generate_bipolar_argumentation_framework(_nr_of_clicks_random: int, af_content: str, af_filename: str, topic: str, ml: str, checkbox_values: list, value: int):
+def generate_bipolar_argumentation_framework(_nr_of_clicks_random: int, af_content: str, af_filename: str, topic: str, ml: str, checkbox_values: list, value: int, toggle:str):
     """
     Generate a random AF after clicking the button and put the result in the text box.
     """
@@ -378,23 +407,24 @@ def generate_bipolar_argumentation_framework(_nr_of_clicks_random: int, af_conte
                 }
             return results,0,af_content,af_filename
 
-    elif dash.callback_context.triggered_id == 'slider-bipolar':
+    elif dash.callback_context.triggered_id == 'slider-bipolar' or dash.callback_context.triggered_id == 'toggle-button-bipolar':
         return prev_results,0,af_content,af_filename
 
 
     elif dash.callback_context.triggered_id == 'generate-random-af-button-bipolar':
         _nr_of_clicks_random=0
-        if topic == 'Racism':
+
+        if topic != 'No topic selected':
             l=[]
             h=[]
-            if 'attack' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_attack.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
+            # Construire le chemin du fichier CSV de manière dynamique
+            base_path = os.path.dirname(__file__)
+            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing.csv')
+            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
+            df = pd.read_csv(file_path, skiprows=0)
+
+            for index, row in df.iterrows():
+                if row.iloc[8]==topic:
                     # Extraire les éléments de la 5ème et 6ème colonne
                     argument_5 = row.iloc[4]
                     argument_6 = row.iloc[5]
@@ -403,537 +433,34 @@ def generate_bipolar_argumentation_framework(_nr_of_clicks_random: int, af_conte
                     argument_6 = replace_spaces(argument_6)
 
                     # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
+                    if toggle == 'All':
+                        if argument_5 not in l:
+                            l.append(argument_5)
+                        if argument_6 not in l:
+                            l.append(argument_6)
+                    if toggle == 'Colored':
+                        if row.iloc[2]=='Attack' and 'attack' in checkbox_values:
+                            if argument_5 not in l:
+                                l.append(argument_5)
+                            if argument_6 not in l:
+                                l.append(argument_6)
+                        if row.iloc[2]=='Support' and 'support' in checkbox_values:
+                            if argument_5 not in l:
+                                l.append(argument_5)
+                            if argument_6 not in l:
+                                l.append(argument_6)
+                    if row.iloc[2]=='Attack' and 'attack' in checkbox_values:
+                        # Ajouter la relation entre les éléments à la deuxième liste de random_af
+                        h.append(f'$A$({argument_5},{argument_6})')
+                    if row.iloc[2]=='Support' and 'support' in checkbox_values:
+                        # Ajouter la relation entre les éléments à la deuxième liste de random_af
+                        h.append(f'$S$({argument_5},{argument_6})')
 
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$A$({argument_5},{argument_6})')
-                
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                   # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
             # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
             abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
             # Construction de la représentation des attaques en utilisant les éléments de defeats
             abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
 
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-
-        if topic == 'Economy':
-            l=[]
-            h=[]
-            if 'attack' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_attack.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-         
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$A$({argument_5},{argument_6})')
-                
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-
-        if topic == 'Climate Change':
-            l=[]
-            h=[]
-            if 'attack' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_attack.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-         
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$A$({argument_5},{argument_6})')
-                
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-
-        if topic == 'Supreme Court':
-            l=[]
-            h=[]
-                           
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_court_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-
-        if topic == 'Minimum Wage':
-            l=[]
-            h=[]
-            if 'attack' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_wage_attack.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-         
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$A$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-
-        if topic == 'COVID':
-            l=[]
-            h=[]
-            if 'attack' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_attack.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-         
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$A$({argument_5},{argument_6})')
-                
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-        
-        if topic == 'Healthcare':
-            l=[]
-            h=[]
-            if 'attack' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_healthcare_attack.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-         
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$A$({argument_5},{argument_6})')
-                
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-
-        if topic == 'National Security':
-            l=[]
-            h=[]
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_security_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-        print(topic)
-        if topic == 'Why They Should Be Elected':
-            print(topic)
-            l=[]
-            h=[]
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_elected_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-
-        if topic == 'Democracy':
-            l=[]
-            h=[]
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_democracy_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
-            results = {
-                'arguments': abstract_arguments_value,
-                'attacks': abstract_attacks_value
-            }
-            prev_results = results
-            return results,0,af_content,af_filename
-        
-        if topic == 'Integrity':
-            l=[]
-            h=[]
-            if 'attack' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_attack.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-         
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$A$({argument_5},{argument_6})')
-                
-            if 'support' in checkbox_values:
-                # Construire le chemin du fichier CSV de manière dynamique
-                base_path = os.path.dirname(__file__)
-                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_support.csv')
-                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                df = pd.read_csv(file_path, skiprows=0)
-                
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-                    # Remplacer les espaces par des tirets
-                    argument_5 = replace_spaces(argument_5)
-                    argument_6 = replace_spaces(argument_6)
-
-                    # Vérifier si les éléments ne sont pas déjà présents dans la première liste de random_af
-                    if argument_5 not in l:
-                        l.append(argument_5)
-                    if argument_6 not in l:
-                        l.append(argument_6)
-
-                    # Ajouter la relation entre les éléments à la deuxième liste de random_af
-                    h.append(f'$S$({argument_5},{argument_6})')
-            
-            # Suppose que random_af est un objet AbstractArgumentationFramework avec des attributs arguments et defeats
-            abstract_arguments_value = '$end$'.join((str(arg) for arg in l))
-            # Construction de la représentation des attaques en utilisant les éléments de defeats
-            abstract_attacks_value = '$end$'.join((str(defeat)for defeat in h) )
-            
             results = {
                 'arguments': abstract_arguments_value,
                 'attacks': abstract_attacks_value
@@ -1275,606 +802,63 @@ def create_bipolar_argumentation_framework(evaluation_results, generation_result
                     data['nodes'][i]['color']=couleur2  
         legend_elements=create_legend_colors(colors,l)   
     
-    elif topic == 'Racism':
+    elif topic!='No topic selected':
+        base_path = os.path.dirname(__file__)
+        file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing.csv')
+        # Lire les données du fichier CSV en sautant la première ligne (l'entête)
+        df = pd.read_csv(file_path, skiprows=0)
         l=[]
-        if 'attack' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_attack.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
+        for i in range(len(data['nodes'])):
+            for index, row in df.iterrows():
+                if row.iloc[8]==topic:
                     # Extraire les éléments de la 5ème et 6ème colonne
                     argument_5 = row.iloc[4]
                     argument_6 = row.iloc[5]
 
                     argument_7 = row.iloc[6]
                     argument_8 = row.iloc[7]
-                    
+                        
                     couleur1 = 'gray'  # default color if no match
                     couleur2 = 'gray'  # default color if no match
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
+                    if row.iloc[2] == 'Attack' and 'attack' in checkbox_values:
+                        if argument_7 not in l:
+                            colors = add_different_color(colors)
+                            couleur1=colors[len(l)]
+                            l.append(argument_7)
+                        else:
+                            couleur1 = colors[l.index(argument_7)]
 
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2        
-                
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
+                        if argument_8 not in l:
+                            colors = add_different_color(colors)
+                            couleur2=colors[len(l)]
+                            l.append(argument_8)
+                        else:
+                            couleur2 = colors[l.index(argument_8)]
+                        if data['nodes'][i]['id'] == argument_5:
+                            data['nodes'][i]['color']=couleur1
+                        if data['nodes'][i]['id'] == argument_6:
+                            data['nodes'][i]['color']=couleur2 
+                    if row.iloc[2] == 'Support' and 'support' in checkbox_values:
+                        if argument_7 not in l:
+                            colors = add_different_color(colors)
+                            couleur1=colors[len(l)]
+                            l.append(argument_7)
+                        else:
+                            couleur1 = colors[l.index(argument_7)]
 
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
+                        if argument_8 not in l:
+                            colors = add_different_color(colors)
+                            couleur2=colors[len(l)]
+                            l.append(argument_8)
+                        else:
+                            couleur2 = colors[l.index(argument_8)]
+                        if data['nodes'][i]['id'] == argument_5:
+                            data['nodes'][i]['color']=couleur1
+                        if data['nodes'][i]['id'] == argument_6:
+                            data['nodes'][i]['color']=couleur2         
 
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-    
-    elif topic == 'Economy':
-        l=[]
-        if 'attack' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_attack.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-    
-    elif topic == 'Climate Change':
-        l=[]
-        if 'attack' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_attack.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
         legend_elements=create_legend_colors(colors,l)
 
-    elif topic == 'Supreme Court':
-        l=[]
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_court_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-    
-    elif topic == 'Minimum Wage':
-        l=[]
-        if 'attack' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_wage_attack.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-
-    elif topic == 'COVID':
-        l=[]
-        if 'attack' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_attack.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-
-    elif topic == 'Healthcare':
-        l=[]
-        if 'attack' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_healthcare_attack.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-
-    elif topic == 'National Security':
-        l=[]
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_security_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-
-    elif topic == 'Why They Should Be Elected':
-        l=[]
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_elected_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-
-    elif topic == 'Democracy':
-        l=[]
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_democracy_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-
-    elif topic == 'Integrity':
-        l=[]
-        if 'attack' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_attack.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        if 'support' in checkbox_values:
-            base_path = os.path.dirname(__file__)
-            file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_support.csv')
-            # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-            df = pd.read_csv(file_path, skiprows=0)
-            l=[]
-            for i in range(len(data['nodes'])):
-                for index, row in df.iterrows():
-                    # Extraire les éléments de la 5ème et 6ème colonne
-                    argument_5 = row.iloc[4]
-                    argument_6 = row.iloc[5]
-
-                    argument_7 = row.iloc[6]
-                    argument_8 = row.iloc[7]
-                    
-                    couleur1 = 'gray'  # default color if no match
-                    couleur2 = 'gray'  # default color if no match
-
-                    if argument_7 not in l:
-                        colors = add_different_color(colors)
-                        couleur1=colors[len(l)]
-                        l.append(argument_7)
-                    else:
-                        couleur1 = colors[l.index(argument_7)]
-                    if argument_8 not in l:
-                        colors = add_different_color(colors)
-                        couleur2=colors[len(l)]
-                        l.append(argument_8)
-                    else:
-                        couleur2 = colors[l.index(argument_8)]
-
-                    if data['nodes'][i]['id'] == argument_5:
-                        data['nodes'][i]['color']=couleur1
-                    if data['nodes'][i]['id'] == argument_6:
-                        data['nodes'][i]['color']=couleur2
-        legend_elements=create_legend_colors(colors,l)
-    
     elif ml == 'SVM':
         # Construire le chemin du fichier CSV de manière dynamique
         base_path = os.path.dirname(__file__)
@@ -2145,468 +1129,56 @@ def display_click_data(selection, af_content: str, af_filename: str, topic: str,
                         elements.append(html.P("\n\n"))
                 return dbc.Row(elements)
 
-            elif topic == 'Racism':
+            elif topic!='No topic selected':
                 elements = []
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    att_list=[]
-                    att_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                att_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                att_by_list.append(row.iloc[3])
-                    if att_list:
-                        elements.append(html.H3("Attack : "))
-                        for item in att_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if att_by_list:
-                        elements.append(html.H3("Attacked by : "))
-                        for item in att_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Economy':
-                elements = []
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    att_list=[]
-                    att_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                att_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                att_by_list.append(row.iloc[3])
-                    if att_list:
-                        elements.append(html.H3("Attack : "))
-                        for item in att_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if att_by_list:
-                        elements.append(html.H3("Attacked by : "))
-                        for item in att_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-            
-            elif topic == 'Climate Change':
-                elements = []
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    att_list=[]
-                    att_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                att_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                att_by_list.append(row.iloc[3])
-                    if att_list:
-                        elements.append(html.H3("Attack : "))
-                        for item in att_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if att_by_list:
-                        elements.append(html.H3("Attacked by : "))
-                        for item in att_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Supreme Court':
-                elements = []
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_court_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Minimum Wage':
-                elements = []
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_wage_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    att_list=[]
-                    att_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                att_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                att_by_list.append(row.iloc[3])
-                    if att_list:
-                        elements.append(html.H3("Attack : "))
-                        for item in att_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if att_by_list:
-                        elements.append(html.H3("Attacked by : "))
-                        for item in att_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'COVID':
-                elements = []
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    att_list=[]
-                    att_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                att_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                att_by_list.append(row.iloc[3])
-                    if att_list:
-                        elements.append(html.H3("Attack : "))
-                        for item in att_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if att_by_list:
-                        elements.append(html.H3("Attacked by : "))
-                        for item in att_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-            
-            elif topic == 'Healthcare':
-                elements = []
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_healthcare_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    att_list=[]
-                    att_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                att_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                att_by_list.append(row.iloc[3])
-                    if att_list:
-                        elements.append(html.H3("Attack : "))
-                        for item in att_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if att_by_list:
-                        elements.append(html.H3("Attacked by : "))
-                        for item in att_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'National Security':
-                elements = []
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_security_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Why They Should Be Elected':
-                elements = []
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_elected_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Democracy':
-                elements = []
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_democracy_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Integrity':
-                elements = []
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    att_list=[]
-                    att_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                att_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                att_by_list.append(row.iloc[3])
-                    if att_list:
-                        elements.append(html.H3("Attack : "))
-                        for item in att_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if att_by_list:
-                        elements.append(html.H3("Attacked by : "))
-                        for item in att_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    sup_list=[]
-                    sup_by_list=[]
-                    for index, row in df.iterrows():
-                        if row.iloc[4] == node_id:
-                            nn= f'{node_id}-{row.iloc[5]}'
-                            if nn in edge_id_list:
-                                sup_list.append(row.iloc[3])
-                        if row.iloc[5] == node_id:
-                            nn= f'{row.iloc[4]}-{node_id}'
-                            if nn in edge_id_list:
-                                sup_by_list.append(row.iloc[3])
-                    if sup_list:
-                        elements.append(html.H3("Support : "))
-                        for item in sup_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
-                    if sup_by_list:
-                        elements.append(html.H3("Supported by : "))
-                        for item in sup_by_list:
-                            elements.append(html.P(item))
-                            elements.append(html.P("\n\n"))
+                base_path = os.path.dirname(__file__)
+                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing.csv')
+                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
+                df = pd.read_csv(file_path, skiprows=0)
+                att_list=[]
+                att_by_list=[]
+                sup_list=[]
+                sup_by_list=[]
+                for index, row in df.iterrows():
+                    if row.iloc[8]==topic:
+                        if row.iloc[2]=='Attack' and 'attack' in checkbox_values:
+                            if row.iloc[4] == node_id:
+                                nn= f'{node_id}-{row.iloc[5]}'
+                                if nn in edge_id_list:
+                                    att_list.append(row.iloc[3])
+                            if row.iloc[5] == node_id:
+                                nn= f'{row.iloc[4]}-{node_id}'
+                                if nn in edge_id_list:
+                                    att_by_list.append(row.iloc[3])
+                        if row.iloc[2]=='Support' and 'support' in checkbox_values:
+                            if row.iloc[4] == node_id:
+                                nn= f'{node_id}-{row.iloc[5]}'
+                                if nn in edge_id_list:
+                                    sup_list.append(row.iloc[3])
+                            if row.iloc[5] == node_id:
+                                nn= f'{row.iloc[4]}-{node_id}'
+                                if nn in edge_id_list:
+                                    sup_by_list.append(row.iloc[3])
+                if att_list:
+                    elements.append(html.H3("Attack : "))
+                    for item in att_list:
+                        elements.append(html.P(item))
+                        elements.append(html.P("\n\n"))
+                if att_by_list:
+                    elements.append(html.H3("Attacked by : "))
+                    for item in att_by_list:
+                        elements.append(html.P(item))
+                        elements.append(html.P("\n\n"))
+                if sup_list:
+                    elements.append(html.H3("Support : "))
+                    for item in sup_list:
+                        elements.append(html.P(item))
+                        elements.append(html.P("\n\n"))
+                if sup_by_list:
+                    elements.append(html.H3("Supported by : "))
+                    for item in sup_by_list:
+                        elements.append(html.P(item))
+                        elements.append(html.P("\n\n"))
                 return dbc.Row(elements)
 
             elif ml == 'SVM':
@@ -2861,199 +1433,25 @@ def display_click_data(selection, af_content: str, af_filename: str, topic: str,
                             elements.append(html.P("\n\n"))
                 return dbc.Row(elements)
 
-            elif topic == 'Racism': 
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_racism_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
+            elif topic!='No topic selected':
+                base_path = os.path.dirname(__file__)
+                file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing.csv')
+                # Lire les données du fichier CSV en sautant la première ligne (l'entête)
+                df = pd.read_csv(file_path, skiprows=0)
+                for index, row in df.iterrows():
+                    if row.iloc[8]==topic:
+                        if row.iloc[2]=='Attack' and 'attack' in checkbox_values:
+                            rela=row.iloc[4]+"-"+row.iloc[5]
+                            if rela == edge_id :
+                                elements.append(html.P(row.iloc[3]))
+                                elements.append(html.P("\n\n"))
+                        if row.iloc[2]=='Support' and 'support' in checkbox_values:
+                            rela=row.iloc[4]+"-"+row.iloc[5]
+                            if rela == edge_id :
+                                elements.append(html.P(row.iloc[3]))
+                                elements.append(html.P("\n\n"))
                 return dbc.Row(elements)
 
-            elif topic == 'Economy': 
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_economy_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-            
-            elif topic == 'Climate Change': 
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_climate_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-            
-            elif topic == 'Supreme Court': 
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_court_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Minimum Wage': 
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_wage_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'COVID': 
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_covid_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Healthcare': 
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_healthcare_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'National Security': 
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_security_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Why They Should Be Elected': 
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_elected_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Democracy': 
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_democracy_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-
-            elif topic == 'Integrity': 
-                if 'attack' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_attack.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                if 'support' in checkbox_values:
-                    base_path = os.path.dirname(__file__)
-                    file_path = os.path.join(base_path, '..', 'data','us_debat', 'full_dataset_processing_integrity_support.csv')
-                    # Lire les données du fichier CSV en sautant la première ligne (l'entête)
-                    df = pd.read_csv(file_path, skiprows=0)
-                    for index, row in df.iterrows():
-                        rela=row.iloc[4]+"-"+row.iloc[5]
-                        if rela == edge_id :
-                            elements.append(html.P(row.iloc[3]))
-                            elements.append(html.P("\n\n"))
-                return dbc.Row(elements)
-            
             elif ml == 'SVM':
                 # Construire le chemin du fichier CSV de manière dynamique
                 base_path = os.path.dirname(__file__)
