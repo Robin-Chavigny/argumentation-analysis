@@ -1487,7 +1487,6 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
                 fdeb = []
                 for arg in ffin:
                     fdeb.append(arg)
-                ffin = []
 
                 if (fdeb == []):
                     for arg in arg_list:
@@ -1499,20 +1498,21 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
                             ffin.append(arg)
                 else:
                     for arg in arg_list:
-                        t=0
-                        for defeat in defeat_list_att:
-                            if arg == defeat.to_argument:
-                                argatt = defeat.from_argument
-                                tt=1
-                                for argdef in fdeb:
-                                    for defeat2 in defeat_list_att:
-                                        if argatt == defeat2.to_argument:
-                                            if argdef == defeat2.from_argument:
-                                                tt=0
-                                if tt == 1:
-                                    t = 1
-                        if t == 0:
-                            ffin.append(arg)
+                        if arg not in fdeb:
+                            t=0
+                            for defeat in defeat_list_att:
+                                if arg == defeat.to_argument:
+                                    argatt = defeat.from_argument
+                                    tt=1
+                                    for argdef in fdeb:
+                                        for defeat2 in defeat_list_att:
+                                            if argatt == defeat2.to_argument:
+                                                if argdef == defeat2.from_argument:
+                                                    tt=0
+                                    if tt == 1:
+                                        t = 1
+                            if t == 0:
+                                ffin.append(arg)
                 
             new_arg_list = ffin   
 
@@ -1536,7 +1536,7 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
                                     if arg == defeat.from_argument and defeat.to_argument in cur:
                                         t=1
                                     elif arg == defeat.to_argument:
-                                        if defeat.to_argument in cur:
+                                        if defeat.from_argument in cur:
                                             t=1
                                         else:
                                             argatt = defeat.from_argument
