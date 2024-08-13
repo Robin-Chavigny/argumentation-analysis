@@ -215,6 +215,9 @@ left_column = dbc.Col(
 )
 right_column = dbc.Col([
     dbc.Row([
+        html.Div(id='nb-node-edge-bipolar')
+    ]),
+    dbc.Row([
         dbc.Card(visdcc.Network(data={'nodes': [], 'edges': []}, id='bipolar-argumentation-graph',
                                 options={'height': '500px'}), body=True),
     ]),
@@ -689,6 +692,7 @@ def create_legend_colors(colors: list, speakers: list):
 @callback(
     Output('bipolar-argumentation-graph', 'data'),
     Output('legend-colors-bipolar', 'children'),
+    Output('nb-node-edge-bipolar', 'children'),
     Output('bipolar-arguments', 'value'),
     Output('bipolar-attacks', 'value'),
 
@@ -1056,7 +1060,29 @@ def create_bipolar_argumentation_framework(evaluation_results, generation_result
                     lab += '\n'
             data['nodes'][i]['label'] = lab
 
-    return data, legend_elements, arguments, attacks
+    arg= arguments.split('$end$')
+    r='Argument : '+str(len(arg))
+    att= attacks.split('$end$')
+    print(att)
+    if att != ['']:
+        a=0
+        s=0
+        for at in att:
+            print(at[0:3])
+            print(at[0:3] == '$A$')
+            if (at[0:3] == '$A$'):
+                a=a+1
+            else:
+                s=s+1
+        rt = 'Attack : '+str(a)
+        rtt= 'Support : '+str(s)
+    else: 
+        rt = 'Attack : 0'
+        rtt = 'Support : 0'
+    rr= r + ' / '+rt+ ' / '+rtt
+    nb_arg_rel = [html.H3(rr)]
+
+    return data, legend_elements, nb_arg_rel, arguments, attacks
 
 
 @callback(

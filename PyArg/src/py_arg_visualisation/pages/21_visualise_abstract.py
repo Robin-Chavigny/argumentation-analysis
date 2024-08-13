@@ -206,6 +206,9 @@ left_column = dbc.Col(
 )
 right_column = dbc.Col([
     dbc.Row([
+        html.Div(id='nb-node-edge')
+    ]),
+    dbc.Row([
         dbc.Card(visdcc.Network(data={'nodes': [], 'edges': []}, id='abstract-argumentation-graph',
                                 options={'height': '500px'}), body=True),
     ]),
@@ -672,6 +675,7 @@ def create_legend_colors(colors: list, speakers: list):
 @callback(
     Output('abstract-argumentation-graph', 'data'),
     Output('legend-colors', 'children'),
+    Output('nb-node-edge', 'children'),
     Output('abstract-arguments', 'value'),
     Output('abstract-attacks', 'value'),
 
@@ -1018,7 +1022,19 @@ def create_abstract_argumentation_framework(evaluation_results, generation_resul
                     lab += '\n'
             data['nodes'][i]['label'] = lab
 
-    return data, legend_elements, arguments, attacks
+    arg= arguments.split('$end$')
+    r='Argument : '+str(len(arg))
+    print(attacks)
+    att= attacks.split('$end$')
+    print(att)
+    if att != ['']:
+        rt = 'Attack : '+str(len(att))
+    else: 
+        rt = 'Attack : 0'
+    rr= r + ' / '+rt
+    nb_arg_rel = [html.H3(rr)]
+
+    return data, legend_elements, nb_arg_rel, arguments, attacks
 
 
 @callback(
