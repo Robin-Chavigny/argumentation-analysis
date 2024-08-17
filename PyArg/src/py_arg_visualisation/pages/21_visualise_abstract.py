@@ -325,7 +325,7 @@ def toggle_button(n_clicks):
     [Input('slider', 'value')]
 )
 def update_output_slider(value):
-    return f'Vous avez sélectionné : {value}'
+    return f'You have seleced : {value}'
 
 def replace_spaces(argument):
     return argument.replace(" ", "_").replace(",", ";")
@@ -1024,9 +1024,7 @@ def create_abstract_argumentation_framework(evaluation_results, generation_resul
 
     arg= arguments.split('$end$')
     r='Argument : '+str(len(arg))
-    print(attacks)
     att= attacks.split('$end$')
-    print(att)
     if att != ['']:
         rt = 'Attack : '+str(len(att))
     else: 
@@ -1492,7 +1490,7 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
 
         new_arg_list = []
 
-        if semantics == 'Grounded' or semantics == 'Completed':
+        if semantics == 'Grounded' or semantics == 'Completed' or semantics == 'Restrainted':
             pri = 'The Grounded semantic is the least fixed point of the characteristic function.'
 
             fdeb = [arg_list]
@@ -1576,26 +1574,83 @@ def evaluate_abstract_argumentation_framework(_nr_of_clicks_accept: int, argumen
                         maxi =cur
                 new_arg_list = maxi 
 
-                    
-        
-        elif semantics == 'Restrainted':
-            pri = 'The Restrainted semantic is the subset of all admissible argument and the argument which are more defended than attacked.'
-            def is_admissible_retrainted(arg):
-                n=0
-                for sup in defeat_list_sup:
-                    if arg == sup.to_argument:
-                        arg_sup = sup.from_argument
-                        if is_admissible_retrainted(arg_sup)<1:
-                            n = n-1
-                for att in defeat_list_att:
-                    if arg == att.to_argument:
-                        arg_att = att.from_argument
-                        if is_admissible_retrainted(arg_att)<1:
-                            n = n+1
-                return n
-            for arg in arg_list:
-                if is_admissible_retrainted(arg)<1:
-                    new_arg_list.append(arg)
+            if semantics == 'Restrainted':
+                pri = 'The Restrainted semantic is the subset of all admissible argument and the argument which are more defended than attacked.'
+                ground = ffin   
+                fdeb = []
+                ffin = [ground]
+
+                while (fdeb != ffin):
+                    fdeb = []
+                    for arg in ffin:
+                        fdeb.append(arg)
+                    ffin = []
+                    for cur in fdeb:
+                        v=0
+                        for arg in arg_list:
+                            if arg not in cur: 
+                                t=0
+                                defe=[]
+                                for defeat in defeat_list_att:
+                                    if arg == defeat.from_argument and defeat.to_argument in cur:
+                                        t=1
+                                    elif arg == defeat.to_argument:
+                                        if defeat.from_argument in cur:
+                                            t=1
+                                        else:
+                                            argatt = defeat.from_argument
+                                            atta_argatt = []
+                                            for defeat2 in defeat_list_att:
+                                                if argatt == defeat.to_argument:
+                                                    if defeat.from_argument in cur or defeat.from_argument==arg:
+                                                        atta_argatt.append(defeat.from_argument)
+                                            if (atta_argatt==[]):
+                                                t=1
+                                            else:
+                                                defe.append(atta_argatt)
+                                tt=1
+                                tot=1
+                                h=[]
+                                for l in defe: 
+                                    tot = tot*len(l)
+                                    h.append(0)
+                                n=0
+                                while (tt==1 and n<tot):
+                                    n=n+1  
+                                    H=[]
+                                    p=0
+                                    for i in range(len(defe)):
+                                        if defe[i][h[i]] not in H:
+                                            H.append(defe[i][h[i]])
+                                        else:
+                                            p=1
+                                            break
+                                    if p==0:
+                                        tt=0
+                                    else:
+                                        r=0
+                                        for i in range(len(h)):
+                                            if h[i]<len(defe[i]):
+                                                if r==0:
+                                                    h[i]=h[i]+1
+                                                    r=1
+                                            else:
+                                                h[i]=0
+                                if tt==1:
+                                    t=1
+                            if t==0:
+                                v=1
+                                cur.append(arg)
+                                ffin.append(cur)
+                        if(v==0):
+                            ffin.append(cur) 
+                maxi = []
+                for cur in ffin:
+                    if len(maxi)<len(cur):
+                        maxi =cur
+                new_arg_list = maxi 
+
+                            
 
         defeat_list = []  
         for arg in new_arg_list:   

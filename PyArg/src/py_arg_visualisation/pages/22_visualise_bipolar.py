@@ -333,7 +333,7 @@ def toggle_button(n_clicks):
     [Input('slider-bipolar', 'value')]
 )
 def update_output_slider(value):
-    return f'Vous avez sélectionné : {value}'
+    return f'You have seleced : {value}'
 
 def replace_spaces(argument):
     return argument.replace(" ", "_").replace(",", ";")
