@@ -97,6 +97,39 @@ body {
 .page{
     background-color: #fff;
     /*border: 2px solid #333;*/
-    padding: auto;
-    margin-top: 20px;
+    padding-right: auto;
+    margin-top: 30px;
+    box-sizing: border-box;
+}
+
+.page-text{
+    padding-right: 5%;
+    margin-left: 5px;
+}
+
+.page-text p{
+    margin-left: 32px;
+}
+
+.page-text ul{
+    margin-left: 82px;
+}
+
+.page-text img{
+    width: 70%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-text .carousel{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-text .carousel-tree{
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
 }
