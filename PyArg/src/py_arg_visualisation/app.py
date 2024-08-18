@@ -25,6 +25,9 @@ app.layout = html.Div([html.Header([
     html.Footer([
         html.P('©CHAVIGNY-Robin. 2024 JAIST Internship.'),
         html.P('Internship supervised by RACHARAK Teeradaj (JAIST) and GUITTON Alexandre (ISIMA).'),
+        html.P(['Github of the project : ',
+            html.A('argumentation-analysis', href='https://github.com/Robin-Chavigny/argumentation-analysis',target="_blank")
+        ]),
         html.P('Contact: robin.chavigny@etu.uca.fr'),
         html.P(['LinkedIn : ',
             html.A('Robin Chavigny', href='https://www.linkedin.com/in/robin-chavigny-568556292/',target="_blank")

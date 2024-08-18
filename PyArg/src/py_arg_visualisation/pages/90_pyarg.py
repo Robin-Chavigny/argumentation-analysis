@@ -21,8 +21,8 @@ carousel_svm_conf_aa = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -39,8 +39,8 @@ carousel_svm_conf_baf = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -51,8 +51,8 @@ carousel_svm_learn = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -63,8 +63,8 @@ carousel_svm_learn_baf = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -77,8 +77,8 @@ carousel_svm = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -89,8 +89,8 @@ carousel_tree_conf_aa = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -101,8 +101,8 @@ carousel_tree_conf_baf = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -115,8 +115,9 @@ carousel_tree = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
+    style={'width': '50%'},
     className="carousel-tree"
 )
 
@@ -127,8 +128,8 @@ carousel_forest_conf_aa = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -139,8 +140,8 @@ carousel_forest_conf_baf = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
     className="carousel"
 )
 
@@ -151,8 +152,9 @@ carousel_svm_imp = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
+    style={'width': '80%'},
     className="carousel"
 )
 carousel_svm_imp_baf = dbc.Carousel(
@@ -162,8 +164,9 @@ carousel_svm_imp_baf = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
+    style={'width': '80%'},
     className="carousel"
 )
 
@@ -176,8 +179,9 @@ carousel_forest = dbc.Carousel(
     ],
     controls=True,  # Affiche les flèches pour naviguer
     indicators=True,  # Affiche les indicateurs en bas du carrousel
-    interval=7000,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
-    ride="carousel",  # Permet de faire défiler automatiquement les images 
+    interval=False,  # Temps en millisecondes avant le passage à l'image suivante (2000 ms = 2 secondes)
+    #ride="carousel",  # Permet de faire défiler automatiquement les images 
+    style={'width': '50%'},
     className="carousel-tree"
 )
 
@@ -212,6 +216,9 @@ layout = dbc.Container([
         html.P(['This Presentation page offers a detailed overview of the various tasks I undertook during the internship, including the methodologies employed, the challenges encountered, and the solutions devised. It reflects on the learning outcomes of '
                 'the internship, highlighting how the experience has contributed to my professional and academic growth. Through this page, I aim to provide a clear account of the significant achievements and developments that marked '
                 'my time at JAIST, and how this experience has paved the way for future endeavors in the field of argumentation and artificial intelligence.']),
+        html.P(['(github of the project : ',
+                html.A('argumentation-analysis', href='https://github.com/Robin-Chavigny/argumentation-analysis',target="_blank"),
+                ')']),
         
         
 
@@ -305,14 +312,14 @@ layout = dbc.Container([
                 '. This file is particularly valuable for our project as it contains the refined results after considering the evaluators trust scores. The dataset offers a more accurate and reliable representation of argumentative relationships, making '
                 'it one of the most utilized resources in our analysis.']),
         html.P(['Here s an overall view of the “full_data_processing.csv” dataset, which includes:']),
-        html.Img(src='/assets/1-Start of the project/1.2-Argument relationship/distribution_of_relation_type_in_full_datset.png'),
+        html.Img(src='/assets/1-Start of the project/1.2-Argument relationship/distribution_of_relation_type_in_full_datset.png',style={'width': '40%', 'height' : '40%'}),
         html.Img(src='/assets/1-Start of the project/1.2-Argument relationship/number_of_relation_per_type_for_each_topic.png'),
         html.P(['This dataset serves as a cornerstone for our project, providing a reliable basis for analyzing argumentative structures and relationships within the debates. It is instrumental in understanding how different statements relate to one '
                 'another, especially in the context of a high-stakes environment like political debates.']),
         html.P(['In the context of analyzing argumentative relationships within debates, it is common to observe that the “neither” relationship is predominant. This phenomenon can be attributed to the nature of debates, where the majority of sentences '
                 'do not exhibit direct argumentative connections with one another.']),
         html.P(['During a debate, participants typically present a wide range of statements, arguments, and counterarguments. However, not all of these elements are directly interconnected in terms of argumentative structure.']),
-        html.Img(src='/assets/1-Start of the project/1.2-Argument relationship/example_of_arguments_not_interacting_with_every_other.png',style={'width': '30%'}),
+        html.Img(src='/assets/1-Start of the project/1.2-Argument relationship/example_of_arguments_not_interacting_with_every_other.png',style={'width': '30%', 'margin-bottom': '15px'}),
         html.P(['Many sentences serve different purposes. They might provide background information, elaborate on a particular point, clarify previous statements, or introduce entirely new ideas. These sentences contribute to the overall flow and '
                 'coherence of the debate but do not necessarily engage in direct argumentative interaction with other sentences.']),
         html.P(['As a result, when analyzing the relationships between sentences, a significant proportion will fall into the “neither” category. This means that these sentences neither support nor attack other sentences within the context of the debate. '
@@ -350,7 +357,7 @@ layout = dbc.Container([
         html.P(['Argumentational reasoning, which is at the heart of this theory, is based on the concept of “external stability” of accepted arguments. External stability refers to the idea that a statement or argument is considered credible and '
                 'acceptable if it can be successfully defended against any attacking arguments. In other words, an argument is deemed believable if it can be maintained in the face of opposition, or more generally, if there is no convincing evidence to '
                 'contradict it. This notion emphasizes the dynamic nature of argumentation, where the strength of an argument is constantly tested against potential objections.']),
-        html.Img(src='/assets/2-Various type of Argumentation Framework (AF)/2.1-What is an AF/visual_representation_of_a_general_AF.png',style={'width': '20%'}),
+        html.Img(src='/assets/2-Various type of Argumentation Framework (AF)/2.1-What is an AF/visual_representation_of_a_general_AF.png',style={'width': '20%','margin-bottom': '15px'}),
         html.P(['This framework provides a mathematical and logical foundation for understanding how arguments can be constructed, related, and evaluated, especially when they oppose or support each other. We generaly define AF = (AR, →) where :']),
         html.Ul([html.Li(['AR : is a set of arguments containing all the individual arguments that are part of the discussion or analysis. Each element in the set represents a distinct argument, which can be a statement, claim, or proposition that someone '
                           'might put forward in the debate.']),
@@ -411,7 +418,7 @@ layout = dbc.Container([
                           html.A('[2]', href='https://aclanthology.org/2021.argmining-1.8.pdf',target="_blank"),
                           ' : A grounded extension is the smallest (with respect to set inclusion) conflictfree set of arguments that defends itself. It is unique and is often considered the most conservative extension because it only includes arguments '
                           'that can be indisputably defended against all attacks. It’s important in situations where minimality and caution in accepting arguments are prioritized. The Grounded extension can be created easily with the following algorithm:',
-                          html.Img(src='/assets/2-Various type of Argumentation Framework (AF)/2.3-Acceptability of arguments/grounded_extension_algorithm.png'),
+                          html.Img(src='/assets/2-Various type of Argumentation Framework (AF)/2.3-Acceptability of arguments/grounded_extension_algorithm.png',style={'margin-bottom': '15px'}),
                           'The notion of acceptable with respect to (w.r.t) an set of argument is variable depending of the type of AF we study. For the AA model we say that a is acceptable w.r.t S if ∀x ∈ A, [(x, a) ∈ R =⇒ ∃s ∈ S, (s, x) ∈ R]. For the '
                           'BAF=(A,att,sup) model we add a other condition, a is acceptable w.r.t S if ∀x ∈ A, [(x, a) ∈ att =⇒ ∃s ∈ S, (s, x) ∈ att or (s, a) ∈ sup].']),
                  html.Li([html.Strong(['Complete Extension']),
@@ -465,7 +472,7 @@ layout = dbc.Container([
                 'we want to distinguish: 0 for non-attack and 1 for attack. These two classes are a recast of the original dataset labels, with the non-attack class regrouping the neither and support labels. For the Bipolar Argumentation Framework (BAF) '
                 'models, we define three classes from the three original label: 0 for neither, 1 for attack, and 2 for support.']),
         html.P(['The original dataset we use in this part is “full_datset.csv”. As illustrated in the following graph, the dataset is significantly imbalanced, with a disproportionate number of relationships labeled as “Neither”.']),
-        html.Img(src='/assets/1-Start of the project/1.2-Argument relationship/distribution_of_relation_type_in_full_datset.png'),
+        html.Img(src='/assets/1-Start of the project/1.2-Argument relationship/distribution_of_relation_type_in_full_datset.png',style={'width': '40%'}),
         html.P(['To address the issue of class imbalance in the dataset, we applied undersampling to the majority classes. In the context of the Abstract Argumentation (AA) framework, the minority class was “Non-attack”, while in the Bipolar Argumentation '
                 'Framework (BAF), the minority classes were “Neither” and “Support”.']),
         html.P(['To achieve this, we selected samples from these overrepresented classes by selecting random existing relation form the majority classes. This effectively decreasing their presence in the dataset. After selecting these new samples, we '
@@ -551,12 +558,12 @@ layout = dbc.Container([
     ],className='page-text'),
     dbc.Row([
         dbc.Col([
-            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_5.png')], href='file:///C:/Users/robin/Documents/Stage%20Japon/argumentation-analysis/PyArg/src/py_arg_visualisation/assets/3-Beginning%20of%20the%20Machine%20learning/3.1-Set%20up/3.1.3-Decision%20Tree/tree_5.pdf',target="_blank"),
-            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_5_baf.png')], href='file:///C:/Users/robin/Documents/Stage%20Japon/argumentation-analysis/PyArg/src/py_arg_visualisation/assets/3-Beginning%20of%20the%20Machine%20learning/3.1-Set%20up/3.1.3-Decision%20Tree/tree_5_baf.pdf',target="_blank"),
+            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_5.png')], href='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_5.pdf',target="_blank"),
+            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_5_baf.png')], href='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_5_baf.pdf',target="_blank"),
             ]),
         dbc.Col([
-            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_8.png')], href='file:///C:/Users/robin/Documents/Stage%20Japon/argumentation-analysis/PyArg/src/py_arg_visualisation/assets/3-Beginning%20of%20the%20Machine%20learning/3.1-Set%20up/3.1.3-Decision%20Tree/tree_8.pdf',target="_blank"),
-            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_8_baf.png')], href='file:///C:/Users/robin/Documents/Stage%20Japon/argumentation-analysis/PyArg/src/py_arg_visualisation/assets/3-Beginning%20of%20the%20Machine%20learning/3.1-Set%20up/3.1.3-Decision%20Tree/tree_8_baf.pdf',target="_blank"),
+            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_8.png')], href='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_8.pdf',target="_blank"),
+            html.A([html.Img(src='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_8_baf.png')], href='/assets/3-Beginning of the Machine learning/3.1-Set up/3.1.3-Decision Tree/tree_8_baf.pdf',target="_blank"),
         ]),
         html.P(['Here is some comparison between the various model of decision tree:'])
     ],className='page-text'),
@@ -576,8 +583,10 @@ layout = dbc.Container([
         dbc.Col([carousel_forest_conf_baf]),
     ],className='page-text'),
     dbc.Row([
-        dbc.Col([carousel_svm_imp]),
-        dbc.Col([carousel_svm_imp_baf]),
+        carousel_svm_imp
+    ],className='page-text'),
+    dbc.Row([
+        carousel_svm_imp_baf
     ],className='page-text'),
     dbc.Row([
         carousel_forest
@@ -770,7 +779,7 @@ layout = dbc.Container([
         html.P(['Throughout the duration of my internship, I was tasked with researching various topics relevant to my main project. These presentations were organized into two distinct groups. The first group consisted of bi-weekly presentations with '
                 'my tutor. Every two weeks, usually on Wednesdays, I was required to present theoretical research on subjects that would later be implemented in the main project, as well as to report on the progress made since the previous meeting.']),
         html.P(['The second group involved presenting broader topics to the entire research group within the laboratory. These presentations provided an overview of more general fields of study and facilitated knowledge sharing among the researchers.']),
-        html.A([html.Img(src='/assets/7-Other work/sus.png')], href='https://docs.google.com/presentation/d/1TXvdsbJ0PBYPrSSD9ZK097Q6sED7aENcUBrao41oy5Q/edit#slide=id.g206563da1c8_0_1',target="_blank"),
+        html.A([html.Img(src='/assets/7-Other work/sus.png', style={'margin-bottom' : '15px'})], href='https://docs.google.com/presentation/d/1TXvdsbJ0PBYPrSSD9ZK097Q6sED7aENcUBrao41oy5Q/edit#slide=id.g206563da1c8_0_1',target="_blank"),
         html.P(['On June 19th, I presented the article titled “Misguided by research — The two dimensions of SUS” by George MELISSOURGOS ',
                 html.A('[6]', href='https://medium.com/@geormelissourgos/leveraging-the-full-potential-of-the-sus-the-two-dimensions-b5846facec3',target="_blank"),
                 '. The presentation focused on the System Usability Scale (SUS) and its upgraded version, the System Usability and Learnability Scale (SULS). These scales are used for evaluating argumentation systems by providing measures of usability '
@@ -848,6 +857,34 @@ layout = dbc.Container([
         html.P(['In conclusion, this internship at JAIST has been an invaluable experience that has significantly deepened my understanding of AI, machine learning, and argumentation frameworks. It provided me with hands-on experience in model '
                 'development, data processing, explanation generation, and system deployment. The skills and knowledge I acquired during this period have prepared me for future challenges and opportunities in the dynamic field of AI and beyond. I am '
                 'confident that the experience and insights gained will serve as a strong foundation for my continued growth and success in this area.']),
+
+
+
+
+
+
+        html.H2(['9-References']),
+        html.P(['[1] P. M. Dung, "On the acceptability of arguments and its fundamental role in nonmonotonic reasoning, logic programming and n-person games", Artificial Intelligence, vol. 77, issue. 2, pp. 321–357, 1995, ',
+                html.A('link.', href='https://pdf.sciencedirectassets.com/271585/1-s2.0-S0004370200X00100/1-s2.0-000437029400041X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQCqVmF3t%2FQ5g1VtYU2i9iVyVPhLVUZ4GwIsZDyrCLIXMgIgL6l68ZpAW61pjGCFw9gvgSCgDBW3WQKClxiJPqHCqMsqswUIHhAFGgwwNTkwMDM1NDY4NjUiDJnZOxjhVA79n2xlhCqQBRaL%2B3LWT9J7ptziYkrCkOp4P3yCQIuH8UyfT9ielATYjYwXqAfSm52uIglvhJqEOrnjEAT%2BFK6kQY69yswEieaYonRsDtRhP6xsVuyRmy4I0puBa3MyGSdW%2BSRHKsmo2GYO%2BiZeKuESrF9RrXLzP1pXUQiKxVLH4SPxxwhMLbDbsKOQBitDtnWhM%2BvByW6c5t5NADv7tX8Gtk3jYhSkzxfj%2FFK7R45BQ%2FZZGfW7kyTMFodhfsGIDV92nq8tYwLHimadVuB%2FPyqKQ%2FR9K3m5RJllkB%2BM0kwThDm4ZscEfl5bpJL%2F5kaVhrV17USYLKCaAi%2BwjZn%2FG8N6AjUqZpfRaBk5XeSmZQPOu8ObJKiNCdBVCXna152xb3KNNhH30uOX%2FMv34NNCmSglftTiOz76hzwDGqaIuHkV58lDPKGUuMrWwnxGrofVhW8jIGpJfzNfeCg2lrI2s6SOrJAqRUZW1CUyrNSbNSbzdNz6hthrS1PyjwLk7JPYyutHwhcs4oU3IB4aA4mMxrhde8wmZBUxEuUXIlSTfeyNEcYLtZjGcm6zUrj8FO05lIC7hizM9%2FV%2FReAVozzLipIp6TL%2Bvn0eIyZkw0bxww%2FhKdrqOQWC9Pc5xBtk%2F7w3JWEEyMwLMN8%2BZpPPcVDvsB2C%2B8fCBdgrjyHPInEhU6Y%2BFr5hQLpZbODmJ9x%2BpCf2nbxW9Xi1EeK71whgMdeI8%2BiDc1j%2Fiz%2BukuCc7m0beF78858TEfm1wZzXGwX%2Fgd2BV3S32%2BVexrJewOy%2FTHDuOL9T3zfIATlO7x93qpNpO6WKL2zZo6VHBBlVAhO2vjjf4cgM8%2FciDnsGF9zvfEWDdhvJyVsJjeqiFW8sIyI%2BjMU%2FZ9hFrTaw812EMLjAqbIGOrEBzYwKICAqiKrYpIA2wZhVIXyB9KINeDsxQPsRsSYLYMxXC2dmP9o2TGa43eSHiIbRVvbvP2L1cs8ur%2Fe5ev0NVgR1MiFk5j3pwmtPDtDS%2BdzwmoCjY6L22PASBqzrF9SpFindqUrBqYClBg3eiVIt7TkTnd8CdxbzGdZ2lN0ZOVRXH0rqY5MRIFDzRGy9qJZ0wXiBZEUG6gr7aAqWrPTTRkwSLn99aFFPgJL2S4z%2BilTw&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240519T211700Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY4QAJFMTT%2F20240519%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c0df67d844a0d0c046a960a6d3f2f8649c95eeeb40d1667fb1e85a4df79474cb&hash=a87607d56da2498c5ba797f1b6e8adda28029dafb4f0ad06a2ef3050de06c1e2&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=000437029400041X&tid=spdf-dbfb7159-3038-4bd8-85f7-69fd0dfd1242&sid=f5e835488af4354e196bed865e0db1c0e4dcgxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=04175d5658595102&rr=88671c7bfcaef6fa&cc=jp',target="_blank"),]),
+        html.A([html.Img(src='/assets/9-References/dung.png'),], href='https://docs.google.com/presentation/d/1Gd4-CV5WjKMs4-XBuxJ5M0ZLoEVgVk_G/edit#slide=id.p1',target="_blank"),
+        html.P(['[2] R. Mestre, R. Milicin, S.E. Middleton, M. Ryan, J. Zhu and T.J. Norman, "M-Arg: Multimodal Argument Mining Dataset for Political Debates with Audio and Transcripts", Proceedings of The 8th Workshop on Argument Mining, pp. 78–88, '
+                'November 2021, ',
+                html.A('https://aclanthology.org/2021.argmining-1.8.pdf.', href='https://aclanthology.org/2021.argmining-1.8.pdf',target="_blank"),
+                ]),
+        html.A([html.Img(src='/assets/9-References/marg.png'),], href='https://docs.google.com/presentation/d/1YlTziO5KjIpDY6pT3L0-MlkmVEYYRCfguoOWfUQWC5U/edit#slide=id.g708a6ee8a1_0_46',target="_blank"),
+        html.P(['[3] P. Lertvittayakumjorn and F. Toni, "Argumentative Explanations for Pattern-based Text Classifier", Argument & Computation, vol. 14, no. 2, pp. 163–234, June 2023, doi: 10.3233/AAC-220004, ',
+                html.A('https://content.iospress.com/articles/argument-and-computation/aac220004#ref018.', href='https://content.iospress.com/articles/argument-and-computation/aac220004#ref018',target="_blank")
+                ]),
+        html.A([html.Img(src='/assets/9-References/lev.png'),], href='https://docs.google.com/presentation/d/1bYmTDVWkTl5dOfiMxNzFPucefAYxzk1jIGsowm4B1Y0/edit#slide=id.p',target="_blank"),
+        html.P(['[4] D. Odekerken, A. Borg and M. Berthold, "Demonstrating PyArg 2.", 7th Workshop on Advances in Argumentation in Artificial Intelligence, CEUR-WS.org, vol. 3546, paper. 14, November 2023, ',
+                html.A('https://ceur-ws.org/Vol-3546/paper14.pdf.', href='https://ceur-ws.org/Vol-3546/paper14.pdf',target="_blank"),]),
+        html.A([html.Img(src='/assets/9-References/pyarg.png'),], href='https://docs.google.com/presentation/d/1YlTziO5KjIpDY6pT3L0-MlkmVEYYRCfguoOWfUQWC5U/edit#slide=id.g2dbf2ba131f_0_299',target="_blank"),
+
+        html.H2(['10-Internship presentation']),
+        html.P(['Mi-Internship presentation :']),
+        html.A([html.Img(src='/assets/10-Internship presentation/mi_internship.png'),], href='https://docs.google.com/presentation/d/1cQm1JuWbem_N-vhwT5iKUOw-8mH06PcQdPNcWaebytE/edit#slide=id.g2ba7dc93f75_0_0',target="_blank"),
+        html.P(['Defense presentationb :']),
+        html.A([html.Img(src='/assets/10-Internship presentation/mi_internship.png'),], href='https://docs.google.com/presentation/d/1cQm1JuWbem_N-vhwT5iKUOw-8mH06PcQdPNcWaebytE/edit#slide=id.g2ba7dc93f75_0_0',target="_blank"),
         
     ],className='page-text'),
 

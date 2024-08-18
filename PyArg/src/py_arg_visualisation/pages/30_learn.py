@@ -18,17 +18,18 @@ exercise_dict = {
 layout = dbc.Container([
             dbc.Row([
                 html.H1('Get in Touch', style={'text-align' : 'center', 'padding': '50px','font-size': '70px'}),
+                html.H1('Collaborate and Share Insights in Argumentation Analysis '),
                 html.P("We appreciate your interest in our internship project, dedicated to advancing the field of argumentation analysis. Whether you have questions, feedback, or are interested in collaborating with us, we would love to hear from you. "
                        "I'm committed to fostering open communication and is eager to connect with fellow researchers, students, and professionals. Please don't hesitate to reach out through the contact form below or via the provided email "
                        "addresses. I look forward to engaging with you and exploring the exciting possibilities in this dynamic area of research.")
-            ]),
+            ],className='page-text'),
             dbc.Row([
-                html.H2('Main reshearcher:',style={'text-decoration': 'underline'}),
+                html.H2('Main reshearcher:'),
                 dbc.Col([
                     html.Img(src='/assets/robin2024.jpg', style={'width': '20%', 'display': 'block','margin-left': '30px'})
                 ]),
                 dbc.Col([
-                    html.H4('Robin Chavigny',style={'margin-left': '-450px'}),
+                    html.H4('Robin Chavigny',style={'margin-left': '-430px'}),
                     html.P(['- Resume: ',
                             html.A('Robin_Chavigny_CV_EN_2024', href='/assets/Robin_Chavigny_CV_EN_2024.pdf',target="_blank")
                     ],style={'margin-left': '-435px','margin-top': '0px'}),
@@ -40,9 +41,9 @@ layout = dbc.Container([
                             html.A('argumentation-analysis', href='https://github.com/Robin-Chavigny/argumentation-analysis',target="_blank")
                     ],style={'margin-left': '-435px','margin-top': '0px'}),
                 ])
-            ]),
+            ],className='page-text'),
             dbc.Row([
-                html.H2('Tutors:',style={'text-decoration': 'underline','margin-top': '10px'}),
+                html.H2('Tutors:',style={'margin-top': '10px'}),
                 dbc.Col([
                     html.H3('From JAIST:',style={'margin-left': '30px'}),
                     dbc.Row([
@@ -50,7 +51,7 @@ layout = dbc.Container([
                             html.Img(src='/assets/racharak2024.png', style={'width': '42%', 'display': 'block','margin-left': '30px'})
                         ]),
                         dbc.Col([
-                            html.H4('Teeradaj Racharak',style={'margin-left': '-150px'}),
+                            html.H4('Teeradaj Racharak',style={'margin-left': '-130px'}),
                             html.P('- Office Phone: (+81)0761-51-1222',style={'margin-left': '-135px','margin-top': '0px'}),
                             html.P('- Email: racharak@jaist.ac.jp ',style={'margin-left': '-135px','margin-top': '0px'}),
                             html.P(['- Website: ',
@@ -66,7 +67,7 @@ layout = dbc.Container([
                             html.Img(src='/assets/guitton2024.png', style={'width': '42%', 'display': 'block','margin-left': '30px'})
                         ]),
                         dbc.Col([
-                            html.H4('Alexandre Guitton',style={'margin-left': '-150px'}),
+                            html.H4('Alexandre Guitton',style={'margin-left': '-130px'}),
                             html.P('- Office Phone: (+33)4 73 40 52 29',style={'margin-left': '-135px','margin-top': '0px'}),
                             html.P('- Email: alexandre.guitton@uca.fr ',style={'margin-left': '-135px','margin-top': '0px'}),
                             html.P(['- Website: ',
@@ -75,9 +76,9 @@ layout = dbc.Container([
                         ])
                     ])
                 ]),
-            ]),
+            ],className='page-text'),
             dbc.Row([
-                html.H2('University:',style={'text-decoration': 'underline','margin-top': '10px'}),
+                html.H2('University:',style={'margin-top': '10px'}),
                 dbc.Col([
                     dbc.Row([
                         dbc.Col([
@@ -109,7 +110,7 @@ layout = dbc.Container([
                         ])
                     ])
                 ]),
-            ]),
+            ],className='page-text'),
         ], className='page')
 
 
