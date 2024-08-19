@@ -884,7 +884,7 @@ layout = dbc.Container([
         html.P(['Mi-Internship presentation :']),
         html.A([html.Img(src='/assets/10-Internship presentation/mi_internship.png'),], href='https://docs.google.com/presentation/d/1cQm1JuWbem_N-vhwT5iKUOw-8mH06PcQdPNcWaebytE/edit#slide=id.g2ba7dc93f75_0_0',target="_blank"),
         html.P(['Defense presentationb :']),
-        html.A([html.Img(src='/assets/10-Internship presentation/mi_internship.png'),], href='https://docs.google.com/presentation/d/1cQm1JuWbem_N-vhwT5iKUOw-8mH06PcQdPNcWaebytE/edit#slide=id.g2ba7dc93f75_0_0',target="_blank"),
+        html.A([html.Img(src='/assets/10-Internship presentation/defense.png'),], href='https://docs.google.com/presentation/d/1GrqavDwTV5Ro6hysghjavcROHwaxTSSnvn1lMcHYB0I/edit#slide=id.p',target="_blank"),
         
     ],className='page-text'),
 
